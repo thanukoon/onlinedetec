@@ -20,6 +20,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// <summary>
     /// Interaction logic for MainWindow
     /// </summary>
+    /// 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         /// <summary>
