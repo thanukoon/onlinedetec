@@ -17,11 +17,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0" Source="Images\Logo.png" HorizontalAlignment="Left" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5" />
         <TextBlock Grid.Row="0" HorizontalAlignment="Right" x:Name="ske" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="18" Width="152" Margin="0,13,0,34">Skelton</TextBlock>
         <TextBlock Grid.Row="0" Margin="263,13,296,5"   FontFamily="Segoe UI" FontSize="17"><Run Text="Fall Detec"/></TextBlock>
 
-        <TextBlock Grid.Row="2" Margin="510,408,49,79"   FontFamily="Segoe UI" FontSize="17" x:Name="alert"><Run Text="Alert"/></TextBlock>
+        <TextBlock Margin="34,19,525,29"   FontFamily="Segoe UI" FontSize="17" x:Name="alert"><Run Text="Alert"/></TextBlock>
 
         <Viewbox Grid.Row="1" HorizontalAlignment="Center">
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />

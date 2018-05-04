@@ -23,6 +23,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        double a; 
         /// <summary>
         /// Radius of drawn hand circles
         /// </summary>
@@ -320,51 +321,138 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 }
             }
 
+
             if (dataReceived)
             {
+
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
-                    // Draw a transparent background to set the render size
-                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
-
-                    int penIndex = 0;
-                    foreach (Body body in this.bodies)
+                    using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
                     {
-                        Pen drawPen = this.bodyColors[penIndex++];
 
-                        if (body.IsTracked)
+
+                        // Draw a transparent background to set the render size
+                        dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+
+                        int penIndex = 0;
+
+                        foreach (Body body in this.bodies)
                         {
-                            this.DrawClippedEdges(body, dc);
 
-                            IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
+                            Pen drawPen = this.bodyColors[penIndex++];
 
-                            // convert the joint points to depth (display) space
-                            Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
-
-                            foreach (JointType jointType in joints.Keys)
+                            if (body.IsTracked)
                             {
-                                // sometimes the depth(Z) of an inferred joint may show as negative
-                                // clamp down to 0.1f to prevent coordinatemapper from returning (-Infinity, -Infinity)
-                                CameraSpacePoint position = joints[jointType].Position;
-                                if (position.Z < 0)
+                                this.DrawClippedEdges(body, dc);
+
+                                IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
+
+                                // convert the joint points to depth (display) space
+                                Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
+
+                                foreach (JointType jointType in joints.Keys)
                                 {
-                                    position.Z = InferredZPositionClamp;
+
+
+                                    // sometimes the depth(Z) of an inferred joint may show as negative
+                                    // clamp down to 0.1f to prevent coordinatemapper from returning (-Infinity, -Infinity)
+
+                                    CameraSpacePoint position = joints[jointType].Position;
+                                    if (position.Z < 0)
+                                    {
+                                        position.Z = InferredZPositionClamp;
+                                    }
+
+                                    Vector4 floorClipPlane = bodyFrame.FloorClipPlane;
+                                    float X = floorClipPlane.X;
+                                    float Y = floorClipPlane.Y;
+                                    float Z = floorClipPlane.Z;
+                                    float W = floorClipPlane.W;
+
+                                    CameraSpacePoint ee = joints[JointType.Neck].Position;
+
+                                    double numerator = X * ee.X + Y * ee.Y + Z * ee.Z + W;
+                                    double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
+                                    double ans = numerator / denominator;
+                                    a = Math.Round(ans, 3);
+                                      Console.WriteLine(a);
+
+                                  //  if (a != null)
+                                   // {
+
+
+                                   //     list1.Add(a);
+                                        //  Console.WriteLine(a);
+
+                                  //  }
+                                    //  floor1[i] = a;
+
+                                    //floor[i] = a;
+                                    /*  if (a <= 0.65 && a >= 0.55)
+                                      {
+                                          y++;
+                                      }
+                                      if (y==2000)
+                                      {
+                                          this.Close();
+                                      }
+                                      Console.WriteLine(y); ออกกำลังกาย */
+
+                                    /*        if (a >= -1.43 && a < -1.03)
+                                            {
+                                                y++;
+                                            }
+                                            if (y == 2000)
+                                            {
+                                             //   this.Close();
+                                            }
+                                            Console.WriteLine(y); */
+
+
+
+
+
+
+
+                                    var spine = body.Joints[JointType.SpineMid];
+
+
+
+                                    DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
+                                    jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
+
+                                /*    message = string.Format("SKelton: X:{0:0.0} Y:{1:0.0} Z:{2:0.0}",   // สร้าง postion บนร่างกาย ด้วย x,y,z 
+                                                                                                        //this.bones.Add(new Tuple<JointType, JointType>(JointType.SpineMid, JointType.SpineBase));
+                                                                                                        //this.bones.(new Tuple<JointType,JointType>(JointType.SpineBase , JointType.SpineBase)),
+                             spine.Position.X,
+                             spine.Position.Y,
+                             spine.Position.Z); */
+                                    // position.X,
+                                    // position.Y,
+                                    // position.Z);
+
                                 }
 
-                                DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
-                                jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
+
+
+                                //Console.WriteLine(i);
+                               // i++;
+
+
+
+                                this.DrawBody(joints, jointPoints, dc, drawPen);
+
+                                this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
+                                this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
+
                             }
-
-                            this.DrawBody(joints, jointPoints, dc, drawPen);
-
-                            this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
-                            this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
                         }
-                    }
+                        // prevent drawing outside of our render area
+                        this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
-                    // prevent drawing outside of our render area
-                    this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+                    }
                 }
+
             }
         }
 
