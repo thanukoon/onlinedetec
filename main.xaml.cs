@@ -45,6 +45,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
              //   NN t1 = new NN();
               //  t1.yes();
+
                 Thread.Sleep(2000);
             });
 
