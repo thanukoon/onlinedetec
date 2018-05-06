@@ -20,7 +20,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
             TextReader tr;
-            tr = File.OpenText(@"C:\Users\Goon\Desktop\sppj2\Falldetection-test\bin\AnyCPU\Debug\data.csv");
+            tr = File.OpenText(@"C:\Users\Goon\Desktop\sppj2\Falldetection-test\bin\AnyCPU\Debug\NN.csv");
 
            string Actor;
             Actor = tr.ReadLine();

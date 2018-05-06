@@ -33,6 +33,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         internal void datatest(ArrayList test)
         {
             
+
                 list.AddRange(test);
             foreach (var item in list)
             {
