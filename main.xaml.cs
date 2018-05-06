@@ -28,7 +28,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-           // please.Text = "Please Wait";
+            please.Text = "Please Wait";
 
             progress.IsIndeterminate = true;
             await LoadData();

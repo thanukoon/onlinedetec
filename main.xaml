@@ -7,8 +7,12 @@
         mc:Ignorable="d"
         Title="main" Height="300" Width="300">
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="C:\Users\Goon\Desktop\sppj2\Falldetection-test\Images\fall.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
         <Button Content="BEGIN" HorizontalAlignment="Left" Margin="100,136,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <ProgressBar HorizontalAlignment="Left" Height="12" Margin="83,210,0,0" VerticalAlignment="Top" Width="123" Name="progress" IsIndeterminate="False"/>
 
+        <TextBlock Name="please" Text=" " FontSize="12" HorizontalAlignment="Left" Margin="110,191,0,54" Width="65" Foreground="Red" />
     </Grid>
 </Window>
