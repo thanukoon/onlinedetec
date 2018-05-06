@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections;
 
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
@@ -20,6 +21,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// </summary>
     public partial class main : Window
     {
+        ArrayList test = new ArrayList();
         public main()
         {
             InitializeComponent();
@@ -33,6 +35,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
             MainWindow c2 = new MainWindow();
+            c2.datatest(test);
             c2.Show();
             this.Close();
 
@@ -44,11 +47,14 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             {
 
                 NN t1 = new NN();
-                t1.yes();
+               test.AddRange(t1.yes());
 
                 Thread.Sleep(2000);
             });
-
+         /* foreach (var item in test)
+            {
+                Console.WriteLine( item);
+            } */
 
         }
     }

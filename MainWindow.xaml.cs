@@ -7,6 +7,7 @@
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -16,6 +17,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
+    using System.Collections;
 
     /// <summary>
     /// Interaction logic for MainWindow
@@ -23,7 +25,22 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        double a; 
+        double a;
+       public ArrayList list = new ArrayList();
+
+     
+
+        internal void datatest(ArrayList test)
+        {
+            
+                list.AddRange(test);
+            foreach (var item in list)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+
         /// <summary>
         /// Radius of drawn hand circles
         /// </summary>
@@ -330,7 +347,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
                     {
 
-
+                        
                         // Draw a transparent background to set the render size
                         dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
