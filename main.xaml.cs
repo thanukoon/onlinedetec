@@ -35,6 +35,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
             MainWindow c2 = new MainWindow();
+       
+            
             c2.datatest(test);
             c2.Show();
             this.Close();

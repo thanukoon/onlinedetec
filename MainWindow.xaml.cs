@@ -26,7 +26,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         double a;
-       public ArrayList list = new ArrayList();
+        int bin;
+       public ArrayList lista = new ArrayList();
+        fall fa = new fall();
 
      
 
@@ -34,13 +36,13 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
             
 
-                list.AddRange(test);
-            foreach (var item in list)
-            {
-                Console.WriteLine(item);
-            }
+                lista.AddRange(test);
+            //    lista.Sort();
+           
+            
         }
-
+        
+       
 
         /// <summary>
         /// Radius of drawn hand circles
@@ -152,6 +154,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         public MainWindow()
         {
+           
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
 
@@ -236,6 +239,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             // initialize the components (controls) of the window
             this.InitializeComponent();
+         
         }
 
         /// <summary>
@@ -392,17 +396,26 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     double numerator = X * ee.X + Y * ee.Y + Z * ee.Z + W;
                                     double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
                                     double ans = numerator / denominator;
-                                    a = Math.Round(ans, 3);
-                                      Console.WriteLine(a);
+                                    a = Math.Round(ans, 1); //3
+                                                            // Console.WriteLine(a);
+                                    fall.test(a,lista);
 
-                                  //  if (a != null)
-                                   // {
+                               /*     bin = lista.BinarySearch(a);ทำต่อ
+
+                                    if (bin > 0)
+                                    {
+
+                                        this.Close();
+                                    } */
+
+                                    //  if (a != null)
+                                    // {
 
 
-                                   //     list1.Add(a);
-                                        //  Console.WriteLine(a);
+                                    //     list1.Add(a);
+                                    //  Console.WriteLine(a);
 
-                                  //  }
+                                    //  }
                                     //  floor1[i] = a;
 
                                     //floor[i] = a;
@@ -619,6 +632,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             // on failure, set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
+          
         }
     }
 }
