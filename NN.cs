@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         List<double[]> count5 = new List<double[]>();
         List<double[]> data = new List<double[]>();
         ArrayList item = new ArrayList();
-       public double[] array = new double[1000];
+       public double[] array = new double[2000];
         int d = 0;
         NeuralNetwork nn;
         // public var data = new List<double[]>();
@@ -42,7 +42,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             
             if (d < 1000)
             {
-                array[d] = ab;
+               // array[d] = ab;
                 d++;
                 /*  item.Add(ab);
                   double[] dd = { ab };
@@ -55,7 +55,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             else
             {
                 //Console.WriteLine(data.Count);
-                count5.Add(array);
+                //count5.Add(array);
                 Console.WriteLine(count5.Count);
                 foreach (var it in count5)
                 {
@@ -77,24 +77,34 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         void getCount()
         {
-            Console.WriteLine(count5.Count);
-
-            for (int i = 0;i<array.Length;i++)
+            //  Console.WriteLine(count5.Count);
+            Console.WriteLine();
+            //Random rnd = new Random();
+            for (int i = 0;i<=1061;i++)
             {
-                array[i] = 1;
+                array[i] = 0.799;
+                /*  count5[0][1] = (new double[][]
+                 {
+                      array[0]
+                  });*/
+                count5[i][0] = array[i];
 
             }
-
-           
-           
-                count5[0] = array;
             
-            trian(count5);
+           
+            
+
+
+
+
+              trian(count5);
 
             //  Console.WriteLine(data.Count);
 
 
         }
+
+       
 
         public void yes()
         {
@@ -190,11 +200,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-         //   Console.WriteLine(nn.ToString());
+            // Console.WriteLine(nn.ToString());
             #endregion
 
             // trian(data);
             // getCount();
+            
             getCount();
 
 
@@ -202,7 +213,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         public void trian(List<double[]> count52)
         {
-            
+           foreach (var it in count52)
+            {
+                Console.WriteLine(it[0]);
+            }
 
             List<double[]> trainData;
             List<double[]> testData;
@@ -257,9 +271,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-            // Console.WriteLine(nn.ToString());
+           //  Console.WriteLine(nn.ToString());
             #endregion
-            Console.WriteLine(data.Count);
+           // Console.WriteLine(data.Count);
 
 
         }
