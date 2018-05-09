@@ -392,8 +392,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
                                     double ans = numerator / denominator;
                                     a = Math.Round(ans, 3);
-                                  
-                                    na.get(a);
+                                   // Console.WriteLine(a);
+                                    na.getAsync(a);
+                                    
                                     
                                     //Console.WriteLine(a);
                                     // lista.Add(a);

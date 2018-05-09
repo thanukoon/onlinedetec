@@ -30,7 +30,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
             please.Text = "Please Wait";
 
-            progress.IsIndeterminate = true;
+           progress.IsIndeterminate = true;
             await LoadData();
 
 

@@ -22,6 +22,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             trainData = data.OrderBy(x => r.Next()).Take(trainDataLength).ToList();
             testData = data.Except(trainData).ToList();
+            
         }
 
         public static List<double[]> NormalizeData(List<double[]> data, int[] columns)
