@@ -27,20 +27,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     {
         double a;
         int bin;
-       public ArrayList lista = new ArrayList();
+        List<double[]> lista = new List<double[]>();
         fall fa = new fall();
+        NN na = new NN();
+        double[] ab;
+        int count1=0;
 
      
 
-        internal void datatest(ArrayList test)
-        {
-            
-
-                lista.AddRange(test);
-            //    lista.Sort();
-           
-            
-        }
+      
         
        
 
@@ -396,17 +391,21 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     double numerator = X * ee.X + Y * ee.Y + Z * ee.Z + W;
                                     double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
                                     double ans = numerator / denominator;
-                                    a = Math.Round(ans, 1); //3
-                                                            // Console.WriteLine(a);
-                                    fall.test(a,lista);
+                                    a = Math.Round(ans, 3);
+                                  
+                                    na.get(a);
+                                    
+                                    //Console.WriteLine(a);
+                                    // lista.Add(a);
+                                    //na.get(lista);
 
-                               /*     bin = lista.BinarySearch(a);ทำต่อ
+                                    /*     bin = lista.BinarySearch(a);ทำต่อ
 
-                                    if (bin > 0)
-                                    {
+                                         if (bin > 0)
+                                         {
 
-                                        this.Close();
-                                    } */
+                                             this.Close();
+                                         } */
 
                                     //  if (a != null)
                                     // {

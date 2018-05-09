@@ -16,15 +16,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
      
         
-        internal static void test(double a, ArrayList lista)
+        internal static void test()
         {
-            int b;
-            Convert.ToDouble(lista); // convert จาก string เป็น double
-            b = lista.BinarySearch(a);
-            if (b>0)
-            {
-                Console.WriteLine("asd");
-            }
+          
+            
             
         }
     }

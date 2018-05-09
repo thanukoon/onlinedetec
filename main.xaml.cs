@@ -37,7 +37,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             MainWindow c2 = new MainWindow();
        
             
-            c2.datatest(test);
+           // c2.datatest(test);
             c2.Show();
             this.Close();
 
@@ -49,9 +49,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             {
 
                 NN t1 = new NN();
-               test.AddRange(t1.yes());
-
+                t1.yes();
                 Thread.Sleep(2000);
+
+              //  Thread.Sleep(2000);
             });
          /* foreach (var item in test)
             {
