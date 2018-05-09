@@ -38,22 +38,33 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
             
             
-            if (d < 1061)
+            if (d < 1000)
             {
-                item[d] = ab;
+                item.Add(ab);
                 
-                //   Console.WriteLine(count5.Count);
                 d++;
             }
             else
             {
                  array = item.ToArray(typeof(double)) as double[];
-                //data[0] = item;
 
-                //item.Clear();
-                //trian(ab);
+                foreach (var it in array)   //แก้ต่อ 
+                {
+                    foreach (var item2 in count5)
+                    {
+                        item2[0] = it;
+                        
+                    }
+
+                }
+                
+
+                trian();
+
+                item.Clear();
+               // trian();
                 // Console.WriteLine("stop");
-                count5.Clear();
+               // count5.Clear();
                 d=0;
             }
 
@@ -116,13 +127,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                
                
                 data.Add(observation);
-              
+              count5.Add(observation);
   
             }
+            
 
-
-
-            foreach (var it in array)   //แก้ต่อ 
+            /* foreach (var it in array)   //แก้ต่อ 
             {
                 foreach (var item2 in count5)
                 {
@@ -130,7 +140,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     Console.WriteLine(item2[0]);
                 }
 
-            }
+            } */
            
 
            // for
@@ -148,7 +158,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             List<double[]> trainData;
             List<double[]> testData;
-            Helpers.GenerateDataSets(count5, out trainData, out testData, 0.8);
+            Helpers.GenerateDataSets(data, out trainData, out testData, 0.8);
 
             Console.WriteLine("Done!");
             Console.WriteLine();
@@ -205,9 +215,75 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         }
 
-        public void trian(double ab)
+        public void trian()
         {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("asd");
            
+                foreach (var it in count5)
+                {
+                    Console.WriteLine(it[0]);
+                
+                }
+            List<double[]> trainData;
+            List<double[]> testData;
+            Helpers.GenerateDataSets(count5, out trainData, out testData, 0.8);
+
+            Console.WriteLine("Done!");
+            Console.WriteLine();
+
+
+            #region Normalization
+            Console.WriteLine("Normalizing data...");
+            List<double[]> normalizedTrainData = Helpers.NormalizeData(trainData, inputColumns);
+            List<double[]> normalizedTestData = Helpers.NormalizeData(testData, inputColumns);
+
+            Console.WriteLine("Done!");
+            Console.WriteLine();
+            #endregion
+
+            #region Initializing the Neural Network
+            Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
+            var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+
+            Console.WriteLine("Initializing weights and bias to small random values...");
+            nn.InitializeWeights();
+
+            Console.WriteLine("Done!");
+            Console.WriteLine();
+            #endregion
+
+            #region Training
+            Console.WriteLine("Beginning training using incremental back-propagation...");
+            nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
+
+            Console.WriteLine("Done!");
+            Console.WriteLine();
+            #endregion
+
+            #region Results
+            double[] weights = nn.GetWeights();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Final neural network weights and bias values:");
+            Console.ResetColor();
+            Helpers.ShowVector(weights, 10, 3, true);
+            Console.WriteLine();
+
+            double trainAcc = nn.Accuracy(normalizedTrainData.ToArray());
+            Console.WriteLine("Accuracy on training data = " + trainAcc.ToString("F4"));
+            double testAcc = nn.Accuracy(normalizedTestData.ToArray());
+            Console.WriteLine("Accuracy on test data = " + testAcc.ToString("F4"));
+            Console.WriteLine();
+
+            //Console.ForegroundColor = ConsoleColor.Green;
+            //Console.WriteLine("Raw results:");
+            //Console.ResetColor();
+            //Console.WriteLine(nn.ToString());
+            #endregion
+
+
+
         }
     }
 }
