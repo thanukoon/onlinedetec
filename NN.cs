@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         List<double[]> count5 = new List<double[]>();
         List<double[]> data = new List<double[]>();
         ArrayList item = new ArrayList();
-        double[] array;
+       public double[] array = new double[1000];
         int d = 0;
         NeuralNetwork nn;
         // public var data = new List<double[]>();
@@ -42,15 +42,21 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             
             if (d < 1000)
             {
-                item.Add(ab);
-                double[] dd = { ab };
-                count5.Add(dd);
+                array[d] = ab;
                 d++;
+                /*  item.Add(ab);
+                  double[] dd = { ab };
+                  count5.Add(dd);
+                  d++;
+                 // getCount();*/
                // getCount();
+                
             }
             else
             {
                 //Console.WriteLine(data.Count);
+                count5.Add(array);
+                Console.WriteLine(count5.Count);
                 foreach (var it in count5)
                 {
                     Console.WriteLine(count5.Count);
@@ -66,12 +72,26 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 d =0;
             }
 
-            getCount();
+           // getCount();
         }
 
         void getCount()
         {
             Console.WriteLine(count5.Count);
+
+            for (int i = 0;i<array.Length;i++)
+            {
+                array[i] = 1;
+
+            }
+
+           
+           
+                count5[0] = array;
+            
+            trian(count5);
+
+            //  Console.WriteLine(data.Count);
 
 
         }
@@ -170,12 +190,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-            Console.WriteLine(nn.ToString());
+         //   Console.WriteLine(nn.ToString());
             #endregion
 
-             trian(data);
-           // getCount();
-            
+            // trian(data);
+            // getCount();
+            getCount();
 
 
         }
