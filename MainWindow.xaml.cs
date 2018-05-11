@@ -18,6 +18,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
     using System.Collections;
+    using System.Linq;
 
     /// <summary>
     /// Interaction logic for MainWindow
@@ -25,13 +26,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        double a;
-        int bin;
-        List<double[]> lista = new List<double[]>();
-        fall fa = new fall();
+        public double a;
+        public int bin;
+      public List<double[]> lista = new List<double[]>();
+     //   fall fa = new fall();
         NN na = new NN();
-        double[] ab;
-        int count1=0;
+        public double[] countdata = new double[55];
+        public int count1=0;
+        public double[] deta= new double[55] ;
+       // Train n2 = new Train();
 
      
 
@@ -79,6 +82,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
 
+       
         /// <summary>
         /// Brush used for drawing joints that are currently inferred
         /// </summary>        
@@ -149,6 +153,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         public MainWindow()
         {
+            
            
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
@@ -237,6 +242,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
          
         }
 
+
         /// <summary>
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         /// </summary>
@@ -319,6 +325,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <param name="e">event arguments</param>
         private void Reader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
+            
             bool dataReceived = false;
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
@@ -336,6 +343,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     bodyFrame.GetAndRefreshBodyData(this.bodies);
                     dataReceived = true;
                 }
+                
             }
 
 
@@ -392,10 +400,32 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
                                     double ans = numerator / denominator;
                                     a = Math.Round(ans, 3);
-                                   // Console.WriteLine(a);
-                                    na.getdata(a);
+                                  //  na.getdata2();
+                                    if (count1 <55)
+                                    {
+                                          deta[count1] = a;
+                                           countdata = deta.Distinct().ToArray();
+                                       count1++;
+                                        //lista.Add(new double[] {a});
+                                        //lista = lista.
+
+                                    }
+                                    else 
+                                    {
+                                        
+                                        na.getdata(countdata);
+                                        count1 = 0;
+                                      //  Console.WriteLine("sd");
+                                    //    lista.Clear();
+                                          }
+
+                                   
                                     
-                                    
+
+                                    // Console.WriteLine(a);
+                                    //na.getdata(a);
+                                    //  na.getdata2();
+
                                     //Console.WriteLine(a);
                                     // lista.Add(a);
                                     //na.get(lista);
@@ -467,8 +497,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
                                 //Console.WriteLine(i);
-                               // i++;
-
+                                
 
 
                                 this.DrawBody(joints, jointPoints, dc, drawPen);
@@ -477,15 +506,20 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                 this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
 
                             }
+                            
+
                         }
                         // prevent drawing outside of our render area
                         this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
-
+                       
                     }
                 }
 
+                
             }
+            
         }
+        
 
         /// <summary>
         /// Draws a body

@@ -10,9 +10,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     {
         private static Random rnd;
 
-        private int numInput;
+        public int numInput;
         private int numHidden;
-        private int numOutput;
+        public int numOutput;
 
         private double[] inputs;
 

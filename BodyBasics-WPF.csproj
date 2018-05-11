@@ -84,7 +84,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="fall.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="main.xaml.cs">
       <DependentUpon>main.xaml</DependentUpon>

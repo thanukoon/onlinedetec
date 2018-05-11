@@ -12,97 +12,56 @@ using System.Threading;
 
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
-    
+   
     class NN
     {
-        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "fall1.csv"); //breast-cancer-wisconsin
-                                                                                                               // private static readonly string scource = 
-                                                                                                               // Number of input neurons, hidden neurons and output neurons
+        private static readonly string sourceFile  = Path.Combine(Environment.CurrentDirectory, "fall1.csv"); //breast-cancer-wisconsin
+                                                                                                              // private static readonly string scource = 
+                                                                                                              // Number of input neurons, hidden neurons and output neurons
         private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
         private static readonly int numInput = inputColumns.Length;
         private const int numHidden = 20;
-        private const int numOutput = 2;
+        private const int  numOutput = 2;
 
         // Parameters for NN training
         private const int maxEpochs = 2000;
         private const double learnRate = 0.05;
         private const double momentum = 0.01;
         private const double weightDecay = 0.0001;
-        List<double[]> count5 = new List<double[]>();
-        List<double[]> data = new List<double[]>();
-        ArrayList item = new ArrayList();
-       public double[] array = new double[1000];
-        int d = 0;
-        NeuralNetwork nn;
-        // public var data = new List<double[]>();
-        
-        public void getdata(double ab)
-        {
-            
-            
-            if (d < 56)
-            {
-                array[d] = ab;
-                Console.WriteLine(array[d]);
-                d++;
-                /*  item.Add(ab);
-                  double[] dd = { ab };
-                  count5.Add(dd);
-                  d++;
-                 // getCount();*/
-                // getCount();
-                
-                
-            }
-            else
-            {
-
-                   for (int i = 0; i <=55; i++)
-                   {
-
-                       count5[0][i] = array[i];
-                   } 
-               
-
-                d = 0;
-               count5 = count5.Distinct().ToList();
-                trian(count5);
-            }
-
-           // getCount();
-        }
-
-        void getCount()
-        {
-            Random rnd = new Random();
-            //  Console.WriteLine(count5.Count);
-            Console.WriteLine();
-            //Random rnd = new Random();
-            for (int i = 0;i<54;i++)
-            {
-                array[i] = 0.214 ;
-                /*  count5[0][1] = (new double[][]
-                 {
-                      array[0]
-                  });*/
-                count5[0][i] = array[i];
-
-            }
-            
-           
-            
-
-
-
-
-            //  trian(count5);
-           // trian(count5);
-            //  Console.WriteLine(data.Count);
-
-
-        }
-
+       static List<double[]> count5 = new List<double[]>();
+         List<double[]> data = new List<double[]>();
        
+
+        ArrayList item = new ArrayList();
+      //  double[] array = new double[1000];
+        int d = 0,j=0;
+        
+        NeuralNetwork nn;
+      //  Train n2 = new Train();
+
+        
+
+       public  void getdata(double[] ab)
+        {
+            for (int i = 0;i<ab.Length;i++)
+            {
+               count5[0][i] = ab[i];
+            }
+           
+            trian(count5);
+
+        }
+
+         public void getCount()
+        {
+            
+         //   Random rnd = new Random();
+           //   Console.WriteLine(count5.Count);
+            Console.WriteLine(count5.Count);
+            //   getdata(123);
+        }
+
+
 
         public void yes()
         {
@@ -140,6 +99,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 data.Add(observation);
                 
               count5.Add(observation);
+               
   
             }
             
@@ -200,25 +160,27 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ResetColor();
              Console.WriteLine(nn.ToString());
             #endregion
-
+            //mainwin.getarray(count5);
+            //  getdata2();
             // trian(data);
-            // getCount();
-           // yes();
-           // getCount();
+            // getCount(count5);
+            // yes();
+             // n2.getlist(count5);
+         
+
 
 
         }
 
         public void trian(List<double[]> count52)
         {
-           foreach (var it in count52)
-            {
-                Console.WriteLine(it[0]);
-            }
+
+
+            Console.WriteLine(count5.Count);
 
             List<double[]> trainData;
             List<double[]> testData;
-            Helpers.GenerateDataSets(count52, out trainData, out testData, 0.8);
+            Helpers.GenerateDataSets(count5, out trainData, out testData, 0.8);
 
             Console.WriteLine("Done!");
             Console.WriteLine();
@@ -229,13 +191,13 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             List<double[]> normalizedTrainData = Helpers.NormalizeData(trainData, inputColumns);
             List<double[]> normalizedTestData = Helpers.NormalizeData(testData, inputColumns);
 
-            //Console.WriteLine("Done!");
-            //Console.WriteLine();
+            Console.WriteLine("Done!");
+            Console.WriteLine();
             //#endregion
 
             //#region Initializing the Neural Network
-            //Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
-            //var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+           // Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
+            var nn = new NeuralNetwork(numInput, numHidden, numOutput);
 
             //Console.WriteLine("Initializing weights and bias to small random values...");
             //nn.InitializeWeights();
@@ -246,14 +208,14 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             //#region Training
             //Console.WriteLine("Beginning training using incremental back-propagation...");
-            //nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
+           // nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
 
             //Console.WriteLine("Done!");
             ////Console.WriteLine();
             //#endregion
 
             //#region Results
-            //double[] weights = nn.GetWeights();
+           // double[] weights = nn.GetWeights();
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Final neural network weights and bias values:");
             //Console.ResetColor();
@@ -271,10 +233,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ResetColor();
              Console.WriteLine(nn.ToString());
             #endregion
-            d = 0;
+           // d = 0;
            // Console.WriteLine(data.Count);
 
 
         }
+
+        
     }
 }
