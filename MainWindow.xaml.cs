@@ -393,7 +393,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     double ans = numerator / denominator;
                                     a = Math.Round(ans, 3);
                                    // Console.WriteLine(a);
-                                    na.getAsync(a);
+                                    na.getdata(a);
                                     
                                     
                                     //Console.WriteLine(a);

@@ -15,12 +15,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     
     class NN
     {
-        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "testnn2.csv"); //breast-cancer-wisconsin
+        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "fall1.csv"); //breast-cancer-wisconsin
                                                                                                                // private static readonly string scource = 
                                                                                                                // Number of input neurons, hidden neurons and output neurons
-        private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8 }; // ไว้เพิ่มcolumn
+        private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
         private static readonly int numInput = inputColumns.Length;
-        private const int numHidden = 7;
+        private const int numHidden = 20;
         private const int numOutput = 2;
 
         // Parameters for NN training
@@ -31,45 +31,42 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         List<double[]> count5 = new List<double[]>();
         List<double[]> data = new List<double[]>();
         ArrayList item = new ArrayList();
-       public double[] array = new double[2000];
+       public double[] array = new double[1000];
         int d = 0;
         NeuralNetwork nn;
         // public var data = new List<double[]>();
         
-        public async Task getAsync(double ab)
+        public void getdata(double ab)
         {
             
             
-            if (d < 1000)
+            if (d < 56)
             {
-               // array[d] = ab;
+                array[d] = ab;
+                Console.WriteLine(array[d]);
                 d++;
                 /*  item.Add(ab);
                   double[] dd = { ab };
                   count5.Add(dd);
                   d++;
                  // getCount();*/
-               // getCount();
+                // getCount();
+                
                 
             }
             else
             {
-                //Console.WriteLine(data.Count);
-                //count5.Add(array);
-                Console.WriteLine(count5.Count);
-                foreach (var it in count5)
-                {
-                    Console.WriteLine(count5.Count);
-                }
-              //  trian(count5);
-               // Console.WriteLine("123lasd");
-               // trian(data);
-              //  item.Clear();
 
-                
-                // Console.WriteLine("stop");
-                // count5.Clear();
-                d =0;
+                   for (int i = 0; i <=55; i++)
+                   {
+
+                       count5[0][i] = array[i];
+                   } 
+               
+
+                d = 0;
+               count5 = count5.Distinct().ToList();
+                trian(count5);
             }
 
            // getCount();
@@ -77,17 +74,18 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         void getCount()
         {
+            Random rnd = new Random();
             //  Console.WriteLine(count5.Count);
             Console.WriteLine();
             //Random rnd = new Random();
-            for (int i = 0;i<=1061;i++)
+            for (int i = 0;i<54;i++)
             {
-                array[i] = 0.799;
+                array[i] = 0.214 ;
                 /*  count5[0][1] = (new double[][]
                  {
                       array[0]
                   });*/
-                count5[i][0] = array[i];
+                count5[0][i] = array[i];
 
             }
             
@@ -97,8 +95,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
 
-              trian(count5);
-
+            //  trian(count5);
+           // trian(count5);
             //  Console.WriteLine(data.Count);
 
 
@@ -200,13 +198,13 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-            // Console.WriteLine(nn.ToString());
+             Console.WriteLine(nn.ToString());
             #endregion
 
             // trian(data);
             // getCount();
-            
-            getCount();
+           // yes();
+           // getCount();
 
 
         }
@@ -271,8 +269,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-           //  Console.WriteLine(nn.ToString());
+             Console.WriteLine(nn.ToString());
             #endregion
+            d = 0;
            // Console.WriteLine(data.Count);
 
 

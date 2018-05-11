@@ -165,7 +165,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             s += "outputs: \n";
             for (int i = 0; i < outputs.Length; ++i)
-                s += outputs[i].ToString("F2") + " ";
+                s += outputs[i].ToString("F3") + " ";
             s += "\n\n";
 
             s += "===============================\n";
