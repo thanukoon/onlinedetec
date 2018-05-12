@@ -20,9 +20,9 @@
         <TextBlock Name="Texth"  Grid.Row="0" HorizontalAlignment="Right"  Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="14" Width="161" Margin="0,17,33,29">position</TextBlock>
         <TextBlock Grid.Row="0" Margin="251,21,260,495"   FontFamily="Segoe UI" FontSize="17" Grid.RowSpan="2"><Run Text="Auto-FallDetection"/></TextBlock>
 
-        <TextBlock Margin="34,10,481,0"   FontFamily="Segoe UI" FontSize="17" x:Name="alert">
+        <TextBlock Margin="24,10,567,0"   FontFamily="Segoe UI" FontSize="17" x:Name="alert">
             <TextBlock.Background>
-                <ImageBrush ImageSource="C:\Users\Goon\Desktop\sppj2\Falldetection-test\Images\cis.png"/>
+                <ImageBrush ImageSource="C:\Users\Goon\Desktop\sppj2\Falldetection-test\Images\cis2.jpg"/>
             </TextBlock.Background><Run Text=""/></TextBlock>
 
         <Viewbox Grid.Row="1" HorizontalAlignment="Center">
