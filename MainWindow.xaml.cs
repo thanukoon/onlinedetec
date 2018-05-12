@@ -326,7 +326,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <param name="e">event arguments</param>
         private void Reader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
-            
+            string message = "No Skeleton Data";
             bool dataReceived = false;
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
@@ -522,12 +522,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
                                     jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
 
-                                /*    message = string.Format("SKelton: X:{0:0.0} Y:{1:0.0} Z:{2:0.0}",   // สร้าง postion บนร่างกาย ด้วย x,y,z 
+                                    message = string.Format("SKelton: X:{0:0.0} Y:{1:0.0} Z:{2:0.0}",   // สร้าง postion บนร่างกาย ด้วย x,y,z 
                                                                                                         //this.bones.Add(new Tuple<JointType, JointType>(JointType.SpineMid, JointType.SpineBase));
                                                                                                         //this.bones.(new Tuple<JointType,JointType>(JointType.SpineBase , JointType.SpineBase)),
                              spine.Position.X,
                              spine.Position.Y,
-                             spine.Position.Z); */
+                             spine.Position.Z); 
                                     // position.X,
                                     // position.Y,
                                     // position.Z);
@@ -557,7 +557,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
                 
             }
-            
+            Texth.Text = message;
+
         }
         
 
