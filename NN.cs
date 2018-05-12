@@ -30,6 +30,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private const double weightDecay = 0.0001;
        static List<double[]> count5 = new List<double[]>();
          List<double[]> data = new List<double[]>();
+     
        
 
         ArrayList item = new ArrayList();
@@ -47,7 +48,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             {
                count5[0][i] = ab[i];
             }
-           
+           // Console.WriteLine(ab.Length);
             trian(count5);
 
         }
@@ -159,6 +160,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
              Console.WriteLine(nn.ToString());
+          
+            
             #endregion
             //mainwin.getarray(count5);
             //  getdata2();
@@ -176,11 +179,16 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
 
 
-            Console.WriteLine(count5.Count);
+            foreach (var it  in count52)
+            {
+                for (int i = 0; i<count52.Count;i++)
+                    Console.WriteLine(it[i]);
+                
+            }
 
             List<double[]> trainData;
             List<double[]> testData;
-            Helpers.GenerateDataSets(count5, out trainData, out testData, 0.8);
+            Helpers.GenerateDataSets(count52, out trainData, out testData, 0.8);
 
             Console.WriteLine("Done!");
             Console.WriteLine();
@@ -197,10 +205,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             //#region Initializing the Neural Network
            // Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
-            var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+          var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+
 
             //Console.WriteLine("Initializing weights and bias to small random values...");
-            //nn.InitializeWeights();
+            nn.InitializeWeights();
 
             //Console.WriteLine("Done!");
             //Console.WriteLine();
@@ -208,14 +217,14 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             //#region Training
             //Console.WriteLine("Beginning training using incremental back-propagation...");
-           // nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
+            nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
 
             //Console.WriteLine("Done!");
             ////Console.WriteLine();
             //#endregion
 
             //#region Results
-           // double[] weights = nn.GetWeights();
+            double[] weights = nn.GetWeights();
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Final neural network weights and bias values:");
             //Console.ResetColor();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
@@ -19,6 +20,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private double[][] ihWeights; // input-hidden
         private double[] hBiases;
         private double[] hOutputs;
+
 
         private double[][] hoWeights; // hidden-output
         private double[] oBiases;
@@ -379,7 +381,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         public void Train(double[][] trainData, int maxEprochs, double learnRate, double momentum,
           double weightDecay)
+
         {
+            
             // train a back-prop style NN classifier using learning rate and momentum
             // weight decay reduces the magnitude of a weight value over time unless that value
             // is constantly increased
@@ -393,6 +397,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             while (epoch < maxEprochs)
             {
+                
                 double mse = MeanSquaredError(trainData);
                 if (mse < 0.020) break; // consider passing value in as parameter
                 //if (mse < 0.001) break; // consider passing value in as parameter
@@ -408,6 +413,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 } // each training tuple
                 ++epoch;
             }
+            
         } // Train
 
         private static void Shuffle(int[] sequence)
