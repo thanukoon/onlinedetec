@@ -9,18 +9,19 @@ using System.Collections;
 using System.Data;
 using System.Windows.Documents;
 using System.Threading;
+using System.Net;
 
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
    
     class NN
     {
-        private static readonly string sourceFile  = Path.Combine(Environment.CurrentDirectory, "fall1.csv"); //breast-cancer-wisconsin
+        private static readonly string sourceFile  = Path.Combine(Environment.CurrentDirectory, "fall2.csv"); //breast-cancer-wisconsin
                                                                                                               // private static readonly string scource = 
                                                                                                               // Number of input neurons, hidden neurons and output neurons
         private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
         private static readonly int numInput = inputColumns.Length;
-        private const int numHidden = 20;
+        private const int numHidden = 34;
         private const int  numOutput = 2;
 
         // Parameters for NN training
@@ -30,8 +31,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private const double weightDecay = 0.0001;
        static List<double[]> count5 = new List<double[]>();
          List<double[]> data = new List<double[]>();
-     
-       
+        double[] del = new double[2];
+        int[] out1;
+
 
         ArrayList item = new ArrayList();
       //  double[] array = new double[1000];
@@ -55,11 +57,18 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
          public void getCount()
         {
-            
-         //   Random rnd = new Random();
-           //   Console.WriteLine(count5.Count);
+          //  count5.RemoveRange(0, 0);
+            Random rnd = new Random();
+           // double[] test ={1.416,1.415,1.414,1.413,1.412,1.411,1.41,1.408,1.406,1.405,1.4,1.395,1.387,1.373,1.355,1.326,1.297,1.292,1.248,1.165,1.118,1.062,0.997,0.94,0.882,0.82,0.755,0.702,0.624,0.687,0.644,0.597,0.585,0.498,0.458,0.426,0.391,0.346,0.328,0.297,0.221,0.21,0.197,0.17,0.182,0.191,0.19,0.194,0.214,0.223,0.213,0.208,0.216,0.235,0.278};
             Console.WriteLine(count5.Count);
-            //   getdata(123);
+            for (int i=0; i<55;i++)
+            {
+                count5[0][1]= 1.425;
+
+            }
+          
+            
+            trian(count5);
         }
 
 
@@ -159,17 +168,21 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-             Console.WriteLine(nn.ToString());
-          
-            
+           //  Console.WriteLine(nn.ToString());
+            //double[] a = nn.output();
+            Console.WriteLine("asd");
+            //   Console.WriteLine(a[0] +" "+a[1]);
+                getCount();
+
+
             #endregion
             //mainwin.getarray(count5);
-            //  getdata2();
+          //  getCount();
             // trian(data);
             // getCount(count5);
             // yes();
-             // n2.getlist(count5);
-         
+            // n2.getlist(count5);
+
 
 
 
@@ -179,12 +192,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
 
 
-            foreach (var it  in count52)
-            {
-                for (int i = 0; i<count52.Count;i++)
-                    Console.WriteLine(it[i]);
-                
-            }
+          
 
             List<double[]> trainData;
             List<double[]> testData;
@@ -240,14 +248,45 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-             Console.WriteLine(nn.ToString());
+           //  Console.WriteLine(nn.ToString());
+
+            double[] a = nn.output();
+            
+            for (int i =0; i<a.Length;i++)
+            {
+                a[i] = Math.Round(a[i],0);
+           //     out1[i] = Convert.ToInt32(a[i],0);
+                
+            }
+             
+            Console.WriteLine(a[0]+ " " +a[1]);
+            if (a[0] == 1 && a[1]== 0)
+            {
+                Console.WriteLine("falldetection");  //alert lineS
+                string UTL = "http://localhost/line/index.php";
+                WebClient client = new WebClient();
+                client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+
+                Stream data = client.OpenRead(UTL);
+                StreamReader reader = new StreamReader(data);
+                string s = reader.ReadToEnd();
+
+            }
+            else
+            {
+                Console.WriteLine("no fall");
+              
+            }
+            
+
+
             #endregion
-           // d = 0;
-           // Console.WriteLine(data.Count);
+            // d = 0;
+            // Console.WriteLine(data.Count);
 
 
         }
 
-        
+
     }
 }

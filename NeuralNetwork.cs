@@ -17,7 +17,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         private double[] inputs;
 
-        private double[][] ihWeights; // input-hidden
+        private  double[][] ihWeights; // input-hidden
         private double[] hBiases;
         private double[] hOutputs;
 
@@ -167,11 +167,20 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             s += "outputs: \n";
             for (int i = 0; i < outputs.Length; ++i)
-                s += outputs[i].ToString("F3") + " ";
+                s += outputs[i].ToString("F1") + " ";
             s += "\n\n";
 
             s += "===============================\n";
             return s;
+        }
+        public  double[] output()
+        {
+           double[] s = new double[outputs.Length];
+            for (int i = 0; i < outputs.Length; ++i)
+                s[i] = Math.Round(outputs[i] , 3);
+
+            return s; 
+
         }
 
         // ----------------------------------------------------------------------------------------
@@ -490,6 +499,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             }
             return bigIndex;
         }
+        
 
     } // NeuralNetwork
 }
