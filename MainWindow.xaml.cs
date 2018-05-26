@@ -35,13 +35,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         public int count1=0;
         public double[] deta= new double[56] ;
         ArrayList listdata = new ArrayList();
-       // Train n2 = new Train();
+        // Train n2 = new Train();
+        //  public String str = " Neck";
 
-     
-
-      
         
-       
+
+
 
         /// <summary>
         /// Radius of drawn hand circles
@@ -240,6 +239,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             // initialize the components (controls) of the window
             this.InitializeComponent();
+
+
          
         }
 
@@ -396,6 +397,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     float W = floorClipPlane.W;
 
                                     CameraSpacePoint ee = joints[JointType.Neck].Position;
+                                  
 
                                     double numerator = X * ee.X + Y * ee.Y + Z * ee.Z + W;
                                     double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
@@ -460,54 +462,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                             } */
 
 
-
-
-                                    // Console.WriteLine(a);
-                                    //na.getdata(a);
-                                    //  na.getdata2();
-
-                                    //Console.WriteLine(a);
-                                    // lista.Add(a);
-                                    //na.get(lista);
-
-                                    /*     bin = lista.BinarySearch(a);ทำต่อ
-
-                                         if (bin > 0)
-                                         {
-
-                                             this.Close();
-                                         } */
-
-                                    //  if (a != null)
-                                    // {
-
-
-                                    //     list1.Add(a);
-                                    //  Console.WriteLine(a);
-
-                                    //  }
-                                    //  floor1[i] = a;
-
-                                    //floor[i] = a;
-                                    /*  if (a <= 0.65 && a >= 0.55)
-                                      {
-                                          y++;
-                                      }
-                                      if (y==2000)
-                                      {
-                                          this.Close();
-                                      }
-                                      Console.WriteLine(y); ออกกำลังกาย */
-
-                                    /*        if (a >= -1.43 && a < -1.03)
-                                            {
-                                                y++;
-                                            }
-                                            if (y == 2000)
-                                            {
-                                             //   this.Close();
-                                            }
-                                            Console.WriteLine(y); */
 
 
 

@@ -22,7 +22,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     public partial class main : Window
     {
         ArrayList test = new ArrayList();
-        public main()
+        public  main()
         {
             InitializeComponent();
         }
@@ -42,6 +42,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             this.Close();
 
         }
+       
 
         private async Task LoadData()
         {
@@ -60,5 +61,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             } */
 
         }
+
+    
     }
 }

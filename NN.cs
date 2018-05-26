@@ -10,6 +10,7 @@ using System.Data;
 using System.Windows.Documents;
 using System.Threading;
 using System.Net;
+using System.Windows;
 
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
@@ -63,7 +64,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             Console.WriteLine(count5.Count);
             for (int i=0; i<55;i++)
             {
-                count5[0][1]= 1.425;
+                count5[0][i]= 1.425;
 
             }
           
@@ -164,6 +165,16 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             double testAcc = nn.Accuracy(normalizedTestData.ToArray());
             Console.WriteLine("Accuracy on test data = " + testAcc.ToString("F4"));
             Console.WriteLine();
+            if (testAcc<0.9)
+            {
+                string messageBoxText = "Accuracy น้อยกว่า 90%";
+                string caption = "Word Processor";
+                MessageBoxImage icon = MessageBoxImage.Warning;
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBox.Show(messageBoxText, caption, button, icon);
+                
+
+            }
 
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
