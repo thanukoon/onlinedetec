@@ -22,6 +22,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     public partial class main : Window
     {
         ArrayList test = new ArrayList();
+      
         public  main()
         {
             InitializeComponent();
@@ -29,11 +30,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             please.Text = "Please Wait";
+         
 
            progress.IsIndeterminate = true;
             await LoadData();
 
-
+         
             MainWindow c2 = new MainWindow();
        
             
@@ -52,6 +54,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 NN t1 = new NN();
                 t1.yes();
                 Thread.Sleep(2000);
+              
 
               //  Thread.Sleep(2000);
             });
@@ -61,6 +64,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             } */
 
         }
+       
 
     
     }

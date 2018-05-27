@@ -167,19 +167,31 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             Console.WriteLine();
             if (testAcc<0.9)
             {
-                string messageBoxText = "Accuracy น้อยกว่า 90%";
-                string caption = "Word Processor";
+                double testac = testAcc*100;
+                
+                string messageBoxText = "Accuracy น้อยกว่า 90%"+" "+"และค่า Accuracy "+testac.ToString("F4")+"%";
+                string caption = "Word Processor" ;
+                
                 MessageBoxImage icon = MessageBoxImage.Warning;
                 MessageBoxButton button = MessageBoxButton.OK;
                 MessageBox.Show(messageBoxText, caption, button, icon);
+
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    Application.Current.Shutdown();
+                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+
+                }); 
                 
+               
+                // Application.Current.Exit();
+
 
             }
 
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Raw results:");
             //Console.ResetColor();
-           //  Console.WriteLine(nn.ToString());
+            //  Console.WriteLine(nn.ToString());
             //double[] a = nn.output();
             Console.WriteLine("asd");
             //   Console.WriteLine(a[0] +" "+a[1]);
