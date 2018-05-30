@@ -107,7 +107,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// Active Kinect sensor
         /// </summary>
         private KinectSensor kinectSensor = null;
-
+        
         /// <summary>
         /// Coordinate mapper to map one type of point to another
         /// </summary>
@@ -162,7 +162,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
 
             // get the depth (display) extents
-            FrameDescription frameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
+
+             FrameDescription frameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
+            //FrameDescription frameDescription = this.kinectSensor.ColorFrameSource.FrameDescription;
 
             // get size of joint space
             this.displayWidth = frameDescription.Width;
@@ -172,6 +174,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
 
             // a bone defined as a line between two joints
+          
             this.bones = new List<Tuple<JointType, JointType>>();
 
             // Torso
@@ -220,6 +223,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             // set IsAvailableChanged event notifier
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
+
+          
+         
 
             // open the sensor
             this.kinectSensor.Open();

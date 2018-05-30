@@ -169,7 +169,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             {
                 double testac = testAcc*100;
                 
-                string messageBoxText = "Accuracy น้อยกว่า 90%"+" "+"และค่า Accuracy "+testac.ToString("F4")+"%";
+                string messageBoxText = "Accuracy น้อยกว่า 90%"+" "+"และค่าพยากรณ์ครั้งนี้คือ "+testac.ToString("F4")+"%";
                 string caption = "Word Processor" ;
                 
                 MessageBoxImage icon = MessageBoxImage.Warning;
@@ -292,11 +292,20 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
                 Stream data = client.OpenRead(UTL);
                 StreamReader reader = new StreamReader(data);
-                string s = reader.ReadToEnd();
+                string s = reader.ReadToEnd(); 
 
             }
             else
             {
+                /* Console.WriteLine("falldetection");  //alert lineS
+                 string UTL = "http://localhost/line/index.php";
+                 WebClient client = new WebClient();
+                 client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+
+                 Stream data = client.OpenRead(UTL);
+                 StreamReader reader = new StreamReader(data);
+                 string s = reader.ReadToEnd(); */
+             
                 Console.WriteLine("no fall");
               
             }

@@ -17,13 +17,26 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Name="Texth"  Grid.Row="0" HorizontalAlignment="Right"  Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="14" Width="161" Margin="0,17,33,29">position</TextBlock>
         <TextBlock Grid.Row="0" Margin="251,21,260,495"   FontFamily="Segoe UI" FontSize="17" Grid.RowSpan="2"><Run Text="Auto-FallDetection"/></TextBlock>
+        <TextBlock Name="Texth"  Grid.Row="0" HorizontalAlignment="Right"  Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="14" Width="161" Margin="0,41,255,5">position</TextBlock>
+        <TextBlock Grid.Row="0" Margin="490,-2,-76,1"   FontFamily="Segoe UI" FontSize="17"><Run Text=" "/><Run Text=" "/><InlineUIContainer>
+                <Image Source="C:\Users\Goon\Desktop\sppj2\Falldetection-test\Images\stri2.jpg" Height="87" Width="144"/>
+            
+
+
+
+            </InlineUIContainer></TextBlock>
 
         <TextBlock Margin="24,10,567,0"   FontFamily="Segoe UI" FontSize="17" x:Name="alert">
             <TextBlock.Background>
                 <ImageBrush ImageSource="C:\Users\Goon\Desktop\sppj2\Falldetection-test\Images\cis2.jpg"/>
-            </TextBlock.Background><Run Text=""/></TextBlock>
+
+            </TextBlock.Background><Run Text=""/><Run Text=" "/><InlineUIContainer>
+                        
+                
+
+
+            </InlineUIContainer></TextBlock>
 
         <Viewbox Grid.Row="1" HorizontalAlignment="Center">
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
@@ -32,5 +45,6 @@
         <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
             <StatusBarItem Content="{Binding StatusText}" />
         </StatusBar>
+
     </Grid>
 </Window>

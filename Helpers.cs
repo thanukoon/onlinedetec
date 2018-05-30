@@ -33,7 +33,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 double mean = sum / data.Count;
                 double sse = data.Sum(observation => (observation[col] - mean) * (observation[col] - mean));
                 double sd = Math.Sqrt(sse / (data.Count - 1));
-
+                
                 foreach (var observation in data)
                 {
                     observation[col] = (observation[col] - mean) / sd;
