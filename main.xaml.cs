@@ -21,7 +21,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// </summary>
     public partial class main : Window
     {
-        ArrayList test = new ArrayList();
       
         public  main()
         {
@@ -36,11 +35,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             await LoadData();
 
          
-            MainWindow c2 = new MainWindow();
+            MainWindow main1 = new MainWindow();
        
             
            // c2.datatest(test);
-            c2.Show();
+            main1.Show();
             this.Close();
 
         }
@@ -52,7 +51,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             {
 
                 NN t1 = new NN();
-                t1.yes();
+                t1.getData();
                 Thread.Sleep(2000);
               
 

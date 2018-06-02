@@ -28,17 +28,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     {
         public double a;
         public int bin;
-      public List<double> lista = new List<double>();
-     //   fall fa = new fall();
+      public List<double> listResult = new List<double>();
         NN na = new NN();
-        public double[] countdata = new double[56] ;
-        public int count1=0;
-        public double[] deta= new double[56] ;
-        ArrayList listdata = new ArrayList();
-        // Train n2 = new Train();
-        //  public String str = " Neck";
-
-        
+ 
+        public double[] data= new double[56] ;
+     
 
 
 
@@ -409,65 +403,28 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
                                     double ans = numerator / denominator;
                                     a = Math.Round(ans, 3);
-                                //    Console.WriteLine(lista.Count);
-                                    if (lista.Count < 56)
+                                
+                                    if (listResult.Count < 56)
                                     {
-                                        lista.Add(a);
-                                        //  countdata = deta.Distinct().ToArray();
-                                         lista = lista.Distinct().ToList();
-                                        // count1++;
-
-                                        
-                                        //Console.WriteLine(lista[1]);
+                                        listResult.Add(a);
+                                     
+                                         listResult = listResult.Distinct().ToList();
+                                    
                                     }
                                     else
                                     {
-                                        for (int i = 0; i<deta.Length;i++ )
+                                        for (int i = 0; i<data.Length;i++ )
                                         {
-                                            deta[i] = lista[i];
-                                          //  Console.WriteLine(deta[i]);
+                                            data[i] = listResult[i];
+                                          
                                         }
 
-                                        na.getdata(deta);
-                                        //Console.WriteLine(countdata.Count());
-                                      //  Console.WriteLine("asd");
-                                        lista.Clear();
+                                        na.getdata(data);
+                                      
+                                        listResult.Clear();
 
                                     }
-                                    //  na.getdata2();
-                                    /*  if (count1 <55)
-                                      {
-                                          if (lista.Count() < 55)
-                                          {
-                                              deta[count1] = a;
-                                              //  countdata = deta.Distinct().ToArray();
-                                              lista = deta.Distinct().ToList();
-                                              count1++;
-                                              Console.WriteLine(lista.Count);
-                                          }
-                                          else
-                                          {
-                                              Console.WriteLine(countdata.Count());
-
-                                          }
-                                         // Console.WriteLine(countdata.Count());
-                                          //lista.Add(new double[] {a});
-                                          //lista = lista.
-
-                                      }
-                                     /* else 
-                                      {
-
-
-                                              na.getdata(countdata);
-                                              count1 = 0;
-                                              Console.WriteLine(countdata.Count());
-
-                                        //  Console.WriteLine("sd");
-                                      //    lista.Clear();
-                                            } */
-
-
+                                   
 
 
 
@@ -488,16 +445,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                              spine.Position.X,
                              spine.Position.Y,
                              spine.Position.Z); 
-                                    // position.X,
-                                    // position.Y,
-                                    // position.Z);
+                                  
 
                                 }
 
-
-
-                                //Console.WriteLine(i);
-                                
+  
 
 
                                 this.DrawBody(joints, jointPoints, dc, drawPen);

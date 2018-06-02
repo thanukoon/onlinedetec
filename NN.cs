@@ -17,7 +17,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
    
     class NN
     {
-        private static readonly string sourceFile  = Path.Combine(Environment.CurrentDirectory, "fall2.csv"); //breast-cancer-wisconsin
+        private static readonly string sourceFile  = Path.Combine(Environment.CurrentDirectory, "datatest.csv"); //breast-cancer-wisconsin
                                                                                                               // private static readonly string scource = 
                                                                                                               // Number of input neurons, hidden neurons and output neurons
         private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
@@ -26,19 +26,16 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private const int  numOutput = 2;
 
         // Parameters for NN training
-        private const int maxEpochs = 2000;
+        private const int maxEpochs = 200;
         private const double learnRate = 0.05;
         private const double momentum = 0.01;
         private const double weightDecay = 0.0001;
-       static List<double[]> count5 = new List<double[]>();
-         List<double[]> data = new List<double[]>();
-        double[] del = new double[2];
-        int[] out1;
+       static List<double[]> cameraData = new List<double[]>();
+         List<double[]> dataFile = new List<double[]>();
 
 
-        ArrayList item = new ArrayList();
+
       //  double[] array = new double[1000];
-        int d = 0,j=0;
         
         NeuralNetwork nn;
       //  Train n2 = new Train();
@@ -49,34 +46,34 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
             for (int i = 0;i<ab.Length;i++)
             {
-               count5[0][i] = ab[i];
+               cameraData[0][i] = ab[i];
             }
            // Console.WriteLine(ab.Length);
-            trian(count5);
+            trian(cameraData);
 
         }
 
          public void getCount()
         {
-          //  count5.RemoveRange(0, 0);
+          //  cameraData.RemoveRange(0, 0);
             Random rnd = new Random();
            // double[] test ={1.416,1.415,1.414,1.413,1.412,1.411,1.41,1.408,1.406,1.405,1.4,1.395,1.387,1.373,1.355,1.326,1.297,1.292,1.248,1.165,1.118,1.062,0.997,0.94,0.882,0.82,0.755,0.702,0.624,0.687,0.644,0.597,0.585,0.498,0.458,0.426,0.391,0.346,0.328,0.297,0.221,0.21,0.197,0.17,0.182,0.191,0.19,0.194,0.214,0.223,0.213,0.208,0.216,0.235,0.278};
-            Console.WriteLine(count5.Count);
+            Console.WriteLine(cameraData.Count);
             for (int i=0; i<55;i++)
             {
-                count5[0][i]= 1.425;
+                cameraData[0][i]= 1.425;
 
             }
           
             
-            trian(count5);
+            trian(cameraData);
         }
 
 
 
-        public void yes()
+        public void getData()
         {
-            Console.WriteLine(inputColumns);
+        //    Console.WriteLine(inputColumns);
           //  double[] it2 = {123.123,123.23,32.23,934.234,5645.342 }; 
     
             Console.WriteLine("Neural Network Demo using .NET by Sebastian Brandes");
@@ -107,9 +104,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 }
      
                
-                data.Add(observation);
+                dataFile.Add(observation);
                 
-              count5.Add(observation);
+              cameraData.Add(observation);
                
   
             }
@@ -118,7 +115,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             List<double[]> trainData;
             List<double[]> testData;
-            Helpers.GenerateDataSets(data, out trainData, out testData, 0.8);
+            Helpers.GenerateDataSets(dataFile, out trainData, out testData, 0.8);
 
             Console.WriteLine("Done!");
             Console.WriteLine();
@@ -199,19 +196,19 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
             #endregion
-            //mainwin.getarray(count5);
+            //mainwin.getarray(cameraData);
           //  getCount();
             // trian(data);
-            // getCount(count5);
+            // getCount(cameraData);
             // yes();
-            // n2.getlist(count5);
+            // n2.getlist(cameraData);
 
 
 
 
         }
 
-        public void trian(List<double[]> count52)
+        public void trian(List<double[]> cameraData2)
         {
 
 
@@ -219,7 +216,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             List<double[]> trainData;
             List<double[]> testData;
-            Helpers.GenerateDataSets(count52, out trainData, out testData, 0.8);
+            Helpers.GenerateDataSets(cameraData2, out trainData, out testData, 0.8);
 
             Console.WriteLine("Done!");
             Console.WriteLine();
@@ -273,17 +270,17 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ResetColor();
            //  Console.WriteLine(nn.ToString());
 
-            double[] a = nn.output();
+            double[] checkacc = nn.output();
             
-            for (int i =0; i<a.Length;i++)
+            for (int i =0; i<checkacc.Length;i++)
             {
-                a[i] = Math.Round(a[i],0);
+                checkacc[i] = Math.Round(checkacc[i],0);
            //     out1[i] = Convert.ToInt32(a[i],0);
                 
             }
              
-            Console.WriteLine(a[0]+ " " +a[1]);
-            if (a[0] == 1 && a[1]== 0)
+            Console.WriteLine(checkacc[0]+ " " +checkacc[1]);
+            if (checkacc[0] == 1 && checkacc[1]== 0)
             {
                 Console.WriteLine("falldetection");  //alert lineS
                 string UTL = "http://localhost/line/index.php";
@@ -297,6 +294,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             }
             else
             {
+
                 /* Console.WriteLine("falldetection");  //alert lineS
                  string UTL = "http://localhost/line/index.php";
                  WebClient client = new WebClient();
@@ -305,7 +303,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                  Stream data = client.OpenRead(UTL);
                  StreamReader reader = new StreamReader(data);
                  string s = reader.ReadToEnd(); */
-             
+
                 Console.WriteLine("no fall");
               
             }
