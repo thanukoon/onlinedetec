@@ -51,7 +51,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             {
 
                 NN t1 = new NN();
-                t1.getData();
+                t1.getCount();
                 Thread.Sleep(2000);
               
 

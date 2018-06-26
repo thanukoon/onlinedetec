@@ -24,9 +24,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private static readonly string sourceFile2 = Path.Combine(Environment.CurrentDirectory, "wei.csv");
 
 
-        private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
+        private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
         private static readonly int numInput = inputColumns.Length;
-        private const int numHidden = 34;
+        private const int numHidden = 20;
         private const int  numOutput = 2;
 
         // Parameters for NN training
@@ -61,7 +61,35 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
          public void getCount()
         {
-          //  cameraData.RemoveRange(0, 0);
+            var rows = File.ReadAllLines(sourceFile);
+
+
+            foreach (var row in rows)
+            {
+
+
+                var values = row.Split(',');
+
+                var observation = new double[values.Length];
+
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+                                                                            //  Console.WriteLine(observation[i]);
+
+
+                }
+
+
+                dataFile.Add(observation);
+
+
+                cameraData.Add(observation);
+
+
+            }
+            //  cameraData.RemoveRange(0, 0);
             Random rnd = new Random();
            // double[] test ={1.416,1.415,1.414,1.413,1.412,1.411,1.41,1.408,1.406,1.405,1.4,1.395,1.387,1.373,1.355,1.326,1.297,1.292,1.248,1.165,1.118,1.062,0.997,0.94,0.882,0.82,0.755,0.702,0.624,0.687,0.644,0.597,0.585,0.498,0.458,0.426,0.391,0.346,0.328,0.297,0.221,0.21,0.197,0.17,0.182,0.191,0.19,0.194,0.214,0.223,0.213,0.208,0.216,0.235,0.278};
            // Console.WriteLine(cameraData.Count);
@@ -249,13 +277,40 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         public void trian(List<double[]> cameraData2)
         {
+            
+            var ro2 = File.ReadAllLines(sourceFile2);
+
+
+            foreach (var row in ro2)
+            {
+
+
+                var values = row.Split(',');
+
+
+                var observation = new double[values.Length];
+
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+                                                                            //  Console.WriteLine(observation[i]);
+
+
+                }
+                test.AddRange(observation);
+
+
+
+
+            }
 
             for (int i = 0; i<test.Count;i++)
             {
-             //   Console.WriteLine(Math.Round(test[i] , 3)); //online
+          //    Console.WriteLine(Math.Round(test[i] , 3)); //online
             }
 
-           // nn.SetWeights(test.ToArray()); //ใช้ส่วนตอนกำลังออนไลน์ทำงาาน:)
+            //ใช้ส่วนตอนกำลังออนไลน์ทำงาาน:)
 
 
             List<double[]> trainData;
@@ -277,11 +332,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             //#region Initializing the Neural Network
            // Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
-     //     var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+          var nn = new NeuralNetwork(numInput, numHidden, numOutput);
 
-
+            nn.SetWeights(test.ToArray());
             //Console.WriteLine("Initializing weights and bias to small random values...");
-          //  nn.InitializeWeights();
+            //  nn.InitializeWeights();
 
             //Console.WriteLine("Done!");
             //Console.WriteLine();
@@ -289,14 +344,14 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             //#region Training
             //Console.WriteLine("Beginning training using incremental back-propagation...");
-        //    nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
+            //    nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
 
             //Console.WriteLine("Done!");
             ////Console.WriteLine();
             //#endregion
 
             //#region Results
-        //    double[] weights = nn.GetWeights();
+            //    double[] weights = nn.GetWeights();
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine("Final neural network weights and bias values:");
             //Console.ResetColor();
@@ -358,7 +413,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             #endregion
             // d = 0;
             // Console.WriteLine(data.Count);
-        //    getCount();
+            getCount();
         }
 
 
