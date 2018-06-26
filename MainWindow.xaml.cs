@@ -397,6 +397,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     float W = floorClipPlane.W;
 
                                     CameraSpacePoint ee = joints[JointType.Neck].Position;
+                                   
                                   
 
                                     double numerator = X * ee.X + Y * ee.Y + Z * ee.Z + W;

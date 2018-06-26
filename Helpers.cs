@@ -50,19 +50,22 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //double d = 7.2;
 
             ArrayList listnn = new ArrayList();
+           
+            
 
             for (int i = 0; i < vector.Length; ++i)
-            {
+                {
 
                 if (i % valsPerRow == 0)
-
                     Console.WriteLine("");
                 Console.Write(vector[i].ToString("F" + decimals).PadLeft(decimals + 4) + " ");
-                a[i] = Math.Round(vector[i], 1);
+                a[i] = Math.Round(vector[i], 4);
+                   // writer.WriteLine(vector[i].ToString(),3); //test csv weight
 
 
 
-            }
+               
+            } 
             if (newLine == true)
             {
                 Console.WriteLine(" ");
