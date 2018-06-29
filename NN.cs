@@ -21,7 +21,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                                                                                                 // private static readonly string scource = 
                                                                                                                 // Number of input neurons, hidden neurons and output neurons
 
-        private static readonly string sourceFile2 = Path.Combine(Environment.CurrentDirectory, "wei.csv");
+        private static readonly string sourceFilehead = Path.Combine(Environment.CurrentDirectory, "weihead.csv");
+        private static readonly string sourceFilespine = Path.Combine(Environment.CurrentDirectory, "weispine.csv");
 
 
         private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }; // ไว้เพิ่มcolumn
@@ -36,8 +37,19 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         private const double weightDecay = 0.0001;
         static List<double[]> cameraData = new List<double[]>();
         List<double[]> dataFile = new List<double[]>();
-        public double[] wei;
-        List<double> test = new List<double>();
+        List<double[]> datahead = new List<double[]>();
+        List<double[]> dataspine = new List<double[]>();
+        public static double[] checkacc;
+        public static double[] checkaccspine;
+        public static double[] sliding;
+        public static double[] slidingspine;
+        public static double[] slidinghead;
+
+        List<double> weihead = new List<double>();
+
+        List<double> weispine = new List<double>();
+        public static int cc;
+
 
 
 
@@ -48,21 +60,152 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
 
-        public void getdata(double[] ab)
+        public void getdata(double[] abhead, double[] abspine)
         {
-            for (int i = 0; i < ab.Length; i++)
+            int k = 16;
+          
+
+           slidinghead= printKMin(abhead, abhead.Length,k);
+            slidingspine=printKMin(abspine, abspine.Length, k); //เทสๆๆๆ
+
+
+            for (int i = 0; i <slidinghead.Count(); i++)
             {
-                cameraData[0][i] = ab[i];
+                datahead[0][i] = slidinghead[i];
+                dataspine[0][i] = slidingspine[i];
             }
+
+
+
             // Console.WriteLine(ab.Length);
-            trian(cameraData);
+
+             trian(datahead ,dataspine);
 
         }
 
+        public double[] printKMin(double[]arr,int n,int k)
+        {
+            int bfslide = 80;
+            int count = 0;
+            int j;
+            double min; 
+            for(int i=0; i < n-k; i++)
+            {
+                min = arr[i];
+                for (j=1; j<k; j++)
+                {
+                    if(arr[i+j] < min)
+                    {
+                        min = arr[i + j];
+                    }
+                }
+                sliding[i] = Math.Round(min, 3);
+            }
+            for (int i = arr.Length-count; i<arr.Length; i++ )
+            {
+                arr[i] = sliding[i - bfslide];
+            }
+            return arr;
+        }
+
+
         public void getCount()
         {
+           
+
+            //  cameraData.RemoveRange(0, 0);
+            Random rnd = new Random();
+            // double[] test ={1.416,1.415,1.414,1.413,1.412,1.411,1.41,1.408,1.406,1.405,1.4,1.395,1.387,1.373,1.355,1.326,1.297,1.292,1.248,1.165,1.118,1.062,0.997,0.94,0.882,0.82,0.755,0.702,0.624,0.687,0.644,0.597,0.585,0.498,0.458,0.426,0.391,0.346,0.328,0.297,0.221,0.21,0.197,0.17,0.182,0.191,0.19,0.194,0.214,0.223,0.213,0.208,0.216,0.235,0.278};
+            // Console.WriteLine(cameraData.Count);
+            for (int i = 0; i < 54; i++)
+            {
+                cameraData[0][i] = 1.425;
+
+            }
+            // Console.WriteLine(cameraData.Count);
+
+            trian(datahead ,dataspine);
+        }
+
+
+
+        public void getData()
+        {
+
+
+
             var rows = File.ReadAllLines(sourceFile);
-            var ro2 = File.ReadAllLines(sourceFile2);
+            foreach (var row in rows)
+            {
+                var values = row.Split(',');
+                cc = values.Length;
+                var observation = new double[values.Length];
+
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+                  //  Console.WriteLine(observation[i]);
+
+
+                }
+
+
+                dataFile.Add(observation);
+                cameraData.Add(observation);
+            }
+            datahead.AddRange(dataFile);
+            int remove = dataFile.Count / 2;
+            datahead.RemoveRange(0, remove);
+            dataspine.AddRange(datahead);
+            int head = 0;
+            int spine = 0;
+            int counthead = 0;
+            int k = 15;
+            for (int i = 0; i < dataFile.Count; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    for (int j = 0; j < cc; j++)
+                    {
+                        datahead[head][j] = dataFile[i][j];
+               //         Console.WriteLine(datahead[head][j]);
+                        counthead++;
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine(counthead);
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    counthead = 0;
+                    //       Console.WriteLine("asd");
+                    head++;
+                }
+                else
+                {
+                    for (int j = 0; j < cc; j++)
+                    {
+                        dataspine[spine][j] = dataFile[i][j];
+                    //    Console.WriteLine(dataspine[spine][j]);
+
+                    }
+                    spine++;
+                }
+
+
+            }
+            getCount();
+
+        }
+
+        public void trian(List<double[]> cameraData2head , List<double[]> cameraDataspine)
+        {
+
+            
+            var ro2 = File.ReadAllLines(sourceFilehead);
+            var ro3 = File.ReadAllLines(sourceFilespine);
 
             //paraell 2นิวรอน
             foreach (var row in ro2)
@@ -82,233 +225,104 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
                 }
-                test.AddRange(observation);
+                weihead.AddRange(observation);
+
+
+
+
+            }
+
+            foreach (var row in ro3)
+            {
+
+
+                var values = row.Split(',');
+
+
+                var observation = new double[values.Length];
+
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+                                                                            //  Console.WriteLine(observation[i]);
+
+
+                }
+                weispine.AddRange(observation);
 
 
 
 
             }
             
-
-
-            foreach (var row in rows)
-            {
-
-
-                var values = row.Split(',');
-
-                var observation = new double[values.Length];
-
-
-                for (int i = 0; i < values.Length; i++)
-                {
-                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
-                                                                            //  Console.WriteLine(observation[i]);
-
-
-                }
-
-
-                dataFile.Add(observation);
-
-
-                cameraData.Add(observation);
-
-
-            }
-            //  cameraData.RemoveRange(0, 0);
-            Random rnd = new Random();
-            // double[] test ={1.416,1.415,1.414,1.413,1.412,1.411,1.41,1.408,1.406,1.405,1.4,1.395,1.387,1.373,1.355,1.326,1.297,1.292,1.248,1.165,1.118,1.062,0.997,0.94,0.882,0.82,0.755,0.702,0.624,0.687,0.644,0.597,0.585,0.498,0.458,0.426,0.391,0.346,0.328,0.297,0.221,0.21,0.197,0.17,0.182,0.191,0.19,0.194,0.214,0.223,0.213,0.208,0.216,0.235,0.278};
-            // Console.WriteLine(cameraData.Count);
-            for (int i = 0; i < 54; i++)
-            {
-                cameraData[0][i] = 1.425;
-
-            }
-            // Console.WriteLine(cameraData.Count);
-
-            trian(cameraData);
-        }
-
-
-
-        public void getData()
-        {
-            //    Console.WriteLine(inputColumns);
-            //  double[] it2 = {123.123,123.23,32.23,934.234,5645.342 }; 
-
-            Console.WriteLine("Neural Network Demo using .NET by Sebastian Brandes");
-            Console.WriteLine("Data Set: Breast Cancer Wisconsin (Diagnostic), November 1995");
-            // Source: httdp://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/
-            Console.WriteLine();
-            //C:\Users\Goon\source\repos\BreastCancerNeuralNetwork\BreastCancerNeuralNetwork\Data\breast-cancer-wisconsin.csv
-            #region Data Generation
-            Console.WriteLine("Loading source file and generating data sets...");
-            var rows = File.ReadAllLines(sourceFile);
-
-
-            foreach (var row in rows)
-            {
-
-
-                var values = row.Split(',');
-
-                var observation = new double[values.Length];
-
-
-                for (int i = 0; i < values.Length; i++)
-                {
-                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
-                                                                            //  Console.WriteLine(observation[i]);
-
-
-                }
-
-
-                dataFile.Add(observation);
-
-
-                cameraData.Add(observation);
-
-
-            }
-
-
-
             List<double[]> trainData;
             List<double[]> testData;
-            Helpers.GenerateDataSets(dataFile, out trainData, out testData, 0.8); // เป็นการสร้าง data weight ของแต่ละตัว โดยการrandom เข้า traindata และ testdata
-
-            Console.WriteLine("Done!");
-            Console.WriteLine();
-            #endregion
-
-            #region Normalization
-            Console.WriteLine("Normalizing data...");
-            List<double[]> normalizedTrainData = Helpers.NormalizeData(trainData, inputColumns); //
-            List<double[]> normalizedTestData = Helpers.NormalizeData(testData, inputColumns);
-
-            Console.WriteLine("Done!");
-            Console.WriteLine();
-            #endregion
-
-            #region Initializing the Neural Network
-            Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
-            nn = new NeuralNetwork(numInput, numHidden, numOutput);
-
-            Console.WriteLine("Initializing weights and bias to small random values...");
-            nn.InitializeWeights();
-
-            Console.WriteLine("Done!");
-            Console.WriteLine();
-            #endregion
-
-            #region Training
-            Console.WriteLine("Beginning training using incremental back-propagation...");
-            nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
-
-            Console.WriteLine("Done!");
-            Console.WriteLine();
-            #endregion
-
-
-            #region Results
-            double[] weights = nn.GetWeights();
-            //   wei = nn.GetWeights();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Final neural network weights and bias values:");
-            Console.ResetColor();
-            Helpers.ShowVector(weights, 10, 3, true);
-            Console.WriteLine();
-
-
-            double trainAcc = nn.Accuracy(normalizedTrainData.ToArray());
-            Console.WriteLine("Accuracy on training data = " + trainAcc.ToString("F4"));
-            double testAcc = nn.Accuracy(normalizedTestData.ToArray());
-            Console.WriteLine("Accuracy on test data = " + testAcc.ToString("F4"));
-            Console.WriteLine();
-            /*  if (testAcc<0.8)
-               {
-                   double testac = testAcc*100;
-                   string messageBoxText = "Accuracy น้อยกว่า 90%"+" "+"และค่าพยากรณ์ครั้งนี้คือ "+testac.ToString("F4")+"%";
-                   string caption = "Word Processor" ;
-                   MessageBoxImage icon = MessageBoxImage.Warning;
-                   MessageBoxButton button = MessageBoxButton.OK;
-                   MessageBox.Show(messageBoxText, caption, button, icon);
-                   Application.Current.Dispatcher.Invoke((Action)delegate {
-                       Application.Current.Shutdown();
-                      System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                   });
-                   // Application.Current.Exit();
-               } */
-
-            var ro2 = File.ReadAllLines(sourceFile2);
-
-
-            foreach (var row in ro2)
+            List<double[]> trainDataspine;
+            List<double[]> testDataspine;
+            try
             {
 
-
-                var values = row.Split(',');
-
-
-                var observation = new double[values.Length];
-
-
-                for (int i = 0; i < values.Length; i++)
+                Parallel.Invoke(() =>
                 {
-                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
-                                                                            //  Console.WriteLine(observation[i]);
+                    Helpers.GenerateDataSets(cameraData2head, out trainData, out testData, 0.8);
+
+                    Helperspine.GenerateDataSets(cameraDataspine, out trainDataspine, out testDataspine, 0.8);
+
+                    Console.WriteLine();
+
+                    List<double[]> normalizedTrainData = Helpers.NormalizeData(trainData, inputColumns);
+                    List<double[]> normalizedTestData = Helpers.NormalizeData(testData, inputColumns);
+
+                    List<double[]> normalizedTrainDataspine = Helperspine.NormalizeData(trainDataspine, inputColumns);
+                    List<double[]> normalizedTestDataspine = Helperspine.NormalizeData(testDataspine, inputColumns);
+
+                    Console.WriteLine();
+                  
+                    var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+                    var nn2 = new NeuralNetworkspine(numInput, numHidden, numOutput);
+
+                    nn.SetWeights(weihead.ToArray());
+                    nn2.SetWeights(weispine.ToArray());
+                   
+
+                    double trainAcc = nn.Accuracy(normalizedTrainData.ToArray());
+                    Console.WriteLine("Accuracy on training data = " + trainAcc.ToString("F4"));
+                    double testAcc = nn.Accuracy(normalizedTestData.ToArray());
+                    Console.WriteLine("Accuracy on test data = " + testAcc.ToString("F4"));
+                    Console.WriteLine();
+
+                    double trainAccspine = nn2.Accuracy(normalizedTrainDataspine.ToArray());
+                    Console.WriteLine("Accuracy on training data = " + trainAccspine.ToString("F4"));
+                    double testAccspine = nn2.Accuracy(normalizedTestDataspine.ToArray());
+                    Console.WriteLine("Accuracy on test data = " + testAccspine.ToString("F4"));
+                    Console.WriteLine();
 
 
-                }
-                test.AddRange(observation);
+                    checkacc = nn.output();
+                    checkaccspine = nn2.output();
+                    for (int i = 0; i < checkacc.Length; i++)
+                    {
+                        checkacc[i] = Math.Round(checkacc[i], 0);
+                    }
+                    for (int i = 0; i < checkaccspine.Length; i++)
+                    {
+                        checkaccspine[i] = Math.Round(checkaccspine[i], 0);
+                    }
 
 
-
-
+                });
+                
             }
-
-            getCount();
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("Raw results:");
-            //Console.ResetColor();
-            //  Console.WriteLine(nn.ToString());
-            //double[] a = nn.output();
-            Console.WriteLine("asd");
-            //   Console.WriteLine(a[0] +" "+a[1]);
-            //getCount();
-
-
-            #endregion
-            //mainwin.getarray(cameraData);
-
-            // trian(data);
-            // getCount(cameraData);
-            // yes();
-            // n2.getlist(cameraData);
-
-
-
-
-        }
-
-        public void trian(List<double[]> cameraData2)
-        {
-
-            
-
-            for (int i = 0; i < test.Count; i++)
+            catch (AggregateException a)
             {
-                //    Console.WriteLine(Math.Round(test[i] , 3)); //online
+                Console.WriteLine(a);
             }
 
-            //ใช้ส่วนตอนกำลังออนไลน์ทำงาาน:)
+            ///Parael
 
 
-            List<double[]> trainData;
-            List<double[]> testData;
-            Helpers.GenerateDataSets(cameraData2, out trainData, out testData, 0.8);
+          /*  Helpers.GenerateDataSets(cameraData2head, out trainData, out testData, 0.8);
 
             //  Console.WriteLine("Done!");
             Console.WriteLine();
@@ -327,7 +341,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             // Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
             var nn = new NeuralNetwork(numInput, numHidden, numOutput);
 
-            nn.SetWeights(test.ToArray());
+            nn.SetWeights(weihead.ToArray());
             //Console.WriteLine("Initializing weights and bias to small random values...");
             //  nn.InitializeWeights();
 
@@ -362,17 +376,19 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //Console.ResetColor();
             //  Console.WriteLine(nn.ToString());
 
-            double[] checkacc = nn.output();
+            double[] checkacc = nn.output(); 
 
             for (int i = 0; i < checkacc.Length; i++)
             {
                 checkacc[i] = Math.Round(checkacc[i], 0);
                 //     out1[i] = Convert.ToInt32(a[i],0);
 
-            }
+            } */
 
             Console.WriteLine(checkacc[0] + " " + checkacc[1]);
-            if (checkacc[0] == 1 && checkacc[1] == 0)
+            Console.WriteLine();
+            Console.WriteLine(checkaccspine[0] + " " + checkaccspine[1]);
+            if (checkacc[0] == 1 && checkacc[1] == 0 &&checkaccspine[0] == 1 && checkaccspine[1] == 0)
             {
                 //       Console.WriteLine("falldetection");  //alert lineS
                 //     string UTL = "http://localhost/line/index.php";
@@ -402,10 +418,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
 
-            #endregion
+           
             // d = 0;
             // Console.WriteLine(data.Count);
-            getCount();
+          // getCount();
         }
 
 

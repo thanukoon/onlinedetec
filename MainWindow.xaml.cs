@@ -19,6 +19,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     using Microsoft.Kinect;
     using System.Collections;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Interaction logic for MainWindow
@@ -26,14 +28,23 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public int intime = 6;
         public double a;
         public int bin;
-      public List<double> listResult = new List<double>();
+      public List<double> listhead = new List<double>();
+        public List<double> listspine = new List<double>();
         NN na = new NN();
  
         public double[] data= new double[56] ;
-     
 
+        double anshead;
+        double ansspinebase;
+        double numnumeratorhead;
+        double numnumeratorspinebase;
+        double denominator;
+
+        public double[] datahead;
+        public double[] dataspine;
 
 
         /// <summary>
@@ -141,14 +152,74 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// Current status text to display
         /// </summary>
         private string statusText = null;
-
+        DispatcherTimer dt = new DispatcherTimer();
+        DispatcherTimer dt2 = new DispatcherTimer();
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
+       
+        private void dtTicker(object sender, EventArgs e)
+        {
+            try
+            {
+
+                Parallel.Invoke(() =>
+                {
+
+                    anshead = Math.Round(numnumeratorhead / denominator, 3);
+                    ansspinebase = Math.Round(numnumeratorspinebase / denominator, 3);
+
+
+
+                });
+                if (intime < 6)
+                {
+                    //  timer++;
+                    listhead.Add(anshead);
+                    listspine.Add(ansspinebase);
+                   
+
+
+                }
+            }
+            catch (AggregateException a)
+            {
+                Console.WriteLine(a);
+            }
+        }
+        
+        private void dataTicker(object sender, EventArgs e)
+        {
+            if (intime == 0)
+            {
+               
+                for (int i = 0; i<listhead.Count; i++)
+                {
+                    datahead[i] = listhead[i];
+                    dataspine[i] = listspine[i];
+                }
+                na.getdata(datahead , dataspine);
+
+
+                listhead.Clear();
+                listspine.Clear();
+                intime = 6;
+            }
+        }
+
         public MainWindow()
         {
-            
-           
+          
+            dt.Interval = TimeSpan.FromSeconds(1);
+            dt.Tick += dtTicker;
+            //    Console.WriteLine(timer);   นับเวลาถอยหลังเข้า nn
+            dt.Start();
+
+            dt2.Interval = TimeSpan.FromSeconds(0.05);
+            dt2.Tick += dataTicker;
+            dt2.Start();
+
+
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
 
@@ -243,6 +314,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
          
         }
+
+        
+
+
 
 
         /// <summary>
@@ -397,13 +472,13 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     float W = floorClipPlane.W;
 
                                     CameraSpacePoint ee = joints[JointType.Neck].Position;
-                                   
-                                  
+                                    CameraSpacePoint head = joints[JointType.Head].Position;
+                                    CameraSpacePoint spinebase = joints[JointType.SpineBase].Position;
 
-                                    double numerator = X * ee.X + Y * ee.Y + Z * ee.Z + W;
-                                    double denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
-                                    double ans = numerator / denominator;
-                                    a = Math.Round(ans, 3);
+                                    numnumeratorhead = X * head.X + Y * head.Y + Z * head.Z + W;
+                                    numnumeratorspinebase = X * spinebase.X + Y * spinebase.Y + Z * spinebase.Z + W;
+                                    denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
+                                  /* 
                                 
                                     if (listResult.Count < 56)
                                     {
@@ -424,7 +499,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                       
                                         listResult.Clear();
 
-                                    }
+                                    } */
                                    
 
 
