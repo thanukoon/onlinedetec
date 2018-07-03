@@ -31,21 +31,22 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         public int intime = 6;
         public double a;
         public int bin;
-      public List<double> listhead = new List<double>();
+        public int ans;
+        public List<double> listhead = new List<double>();
         public List<double> listspine = new List<double>();
         NN na = new NN();
- 
-        public double[] data= new double[56] ;
+        public int timer = 0;
+        public double[] data = new double[56];
 
         double anshead;
         double ansspinebase;
         double numnumeratorhead;
         double numnumeratorspinebase;
         double denominator;
+        public double[] data1 = new double[80];
 
-        public double[] datahead;
-        public double[] dataspine;
-
+        public double[] datahead = new double[100];
+        public double[] dataspine = new double[100];
 
         /// <summary>
         /// Radius of drawn hand circles
@@ -157,8 +158,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
-       
-        private void dtTicker(object sender, EventArgs e)
+
+        private void dataTicker(object sender, EventArgs e)
         {
             try
             {
@@ -175,9 +176,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 if (intime < 6)
                 {
                     //  timer++;
+
                     listhead.Add(anshead);
+
                     listspine.Add(ansspinebase);
-                   
+
 
 
                 }
@@ -187,32 +190,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 Console.WriteLine(a);
             }
         }
-        
-        private void dataTicker(object sender, EventArgs e)
+
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (intime == 0)
-            {
-               
-                for (int i = 0; i<listhead.Count; i++)
-                {
-                    datahead[i] = listhead[i];
-                    dataspine[i] = listspine[i];
-                }
-                na.getdata(datahead , dataspine);
-
-
-                listhead.Clear();
-                listspine.Clear();
-                intime = 6;
-            }
-        }
-
-        public MainWindow()
-        {
-          
             dt.Interval = TimeSpan.FromSeconds(1);
             dt.Tick += dtTicker;
-            //    Console.WriteLine(timer);   นับเวลาถอยหลังเข้า nn
+
             dt.Start();
 
             dt2.Interval = TimeSpan.FromSeconds(0.05);
@@ -220,6 +203,54 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             dt2.Start();
 
 
+        }
+        private void dtTicker(object sender, EventArgs e)
+        {
+            intime--;
+            Console.WriteLine(intime);
+
+
+
+            if (intime == 0)
+            {
+                for (int i = 0; i < listhead.Count; i++)
+                {
+                    datahead[i] = listhead[i];
+                    // Console.WriteLine(datahead[i]);
+                    dataspine[i] = listspine[i];
+                }
+
+                ans = datahead.Length - listhead.Count;
+
+                if (ans != 20)
+                {
+                    for (int i = datahead.Length - ans; i <= 80; i++)
+                    {
+                        datahead[i] = datahead[datahead.Length - ans - 1];
+                        dataspine[i] = dataspine[datahead.Length - ans - 1];
+                    }
+                }
+
+             //   Console.WriteLine(listhead.Count());
+                for (int i = 0; i < listhead.Count; i++)
+                {
+                    datahead[i] = listhead[i];
+                    dataspine[i] = listspine[i];
+                }
+             //   Console.WriteLine("asd");
+                na.getdata(datahead, dataspine);
+
+
+                listhead.Clear();
+                listspine.Clear();
+                intime = 6;
+            }
+
+        }
+        public MainWindow()
+        {
+          
+         
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
 
