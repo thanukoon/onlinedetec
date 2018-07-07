@@ -331,11 +331,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
                     //     Console.WriteLine();
 
-                    List<double[]> normalizedTrainData = cameraData2head;//Helpers.NormalizeData(trainData, inputColumns);
-                    List<double[]> normalizedTestData = cameraData2head;//Helpers.NormalizeData(testData, inputColumns);
+                    List<double[]> normalizedTrainData = Helpers.NormalizeData(cameraData2head, inputColumns);
+                    List<double[]> normalizedTestData = Helpers.NormalizeData(cameraData2head, inputColumns);
 
-                    List<double[]> normalizedTrainDataspine = cameraDataspine;//Helperspine.NormalizeData(trainDataspine, inputColumns);
-                    List<double[]> normalizedTestDataspine = cameraDataspine;//Helperspine.NormalizeData(testDataspine, inputColumns);
+                    List<double[]> normalizedTrainDataspine = Helperspine.NormalizeData(cameraDataspine, inputColumns);
+                    List<double[]> normalizedTestDataspine = Helperspine.NormalizeData(cameraDataspine, inputColumns);
 
            
                   
@@ -362,6 +362,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     double testAccspine = nn2.Accuracy(normalizedTestDataspine.ToArray());
                     Console.WriteLine("Accuracy on test data = " + testAccspine.ToString("F4"));
                     Console.WriteLine();
+
 
 
                     checkacc = nn.output();
