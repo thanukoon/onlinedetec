@@ -17,7 +17,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
     class NN
     {
-        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "ttest.csv"); //breast-cancer-wisconsin
+        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "datatest.csv"); //breast-cancer-wisconsin
                                                                                                                 // private static readonly string scource = 
                                                                                                                 // Number of input neurons, hidden neurons and output neurons
 
@@ -27,7 +27,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         private static readonly int[] inputColumns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99 }; // ไว้เพิ่มcolumn
         private static readonly int numInput = inputColumns.Length;
-        private const int numHidden = 30;
+        private const int numHidden = 50;
         private const int numOutput = 2;
 
         // Parameters for NN training
@@ -91,7 +91,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             int head = 0;
             int spine = 0;
             int counthead = 0;
-            int k = 15;
             for (int i = 0; i < dataFile.Count; i++)
             {
                 if (i % 2 == 0)
@@ -135,18 +134,20 @@ namespace Microsoft.Samples.Kinect.BodyBasics
            
 
             // Console.WriteLine(ab.Length);
-            //Console.WriteLine(datahead.Count);
-            //Console.WriteLine(dataspine.Count);
+            Console.WriteLine(slidinghead.Length +"head");
+            Console.WriteLine(slidingspine.Length+"spine");
+            Console.WriteLine(datahead.Count +"datahead");
 
             trian(datahead, dataspine);
             datahead.Clear();
             dataspine.Clear();
+            dataFile.Clear();
 
         }
 
         public double[] printKMin(double[] arr, int n)
         {
-            int k = 20;
+            int k = 60;
             int bfslide = 80;
             int count = 0;
             int j;
@@ -305,7 +306,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 {
                     double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
                                                                             //  Console.WriteLine(observation[i]);
-
+                 
 
                 }
                 weispine.AddRange(observation);
@@ -324,28 +325,33 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
                 Parallel.Invoke(() =>
                 {
-                    Helpers.GenerateDataSets(cameraData2head, out trainData, out testData, 0.8);
+                   // Helpers.GenerateDataSets(cameraData2head, out trainData, out testData, 0.8);
 
-                    Helperspine.GenerateDataSets(cameraDataspine, out trainDataspine, out testDataspine, 0.8);
+                    //Helperspine.GenerateDataSets(cameraDataspine, out trainDataspine, out testDataspine, 0.8);
 
-               //     Console.WriteLine();
+                    //     Console.WriteLine();
 
-                    List<double[]> normalizedTrainData = Helpers.NormalizeData(trainData, inputColumns);
-                    List<double[]> normalizedTestData = Helpers.NormalizeData(testData, inputColumns);
+                    List<double[]> normalizedTrainData = cameraData2head;//Helpers.NormalizeData(trainData, inputColumns);
+                    List<double[]> normalizedTestData = cameraData2head;//Helpers.NormalizeData(testData, inputColumns);
 
-                    List<double[]> normalizedTrainDataspine = Helperspine.NormalizeData(trainDataspine, inputColumns);
-                    List<double[]> normalizedTestDataspine = Helperspine.NormalizeData(testDataspine, inputColumns);
+                    List<double[]> normalizedTrainDataspine = cameraDataspine;//Helperspine.NormalizeData(trainDataspine, inputColumns);
+                    List<double[]> normalizedTestDataspine = cameraDataspine;//Helperspine.NormalizeData(testDataspine, inputColumns);
 
-                 //   Console.WriteLine();
+           
                   
                     var nn = new NeuralNetwork(numInput, numHidden, numOutput);
+                
                     var nn2 = new NeuralNetworkspine(numInput, numHidden, numOutput);
+               
+                     nn.SetWeights(weihead.ToArray());
 
-                    nn.SetWeights(weihead.ToArray());
-                    nn2.SetWeights(weispine.ToArray());
-                   
+                     nn2.SetWeights(weispine.ToArray());
 
-                    double trainAcc = nn.Accuracy(normalizedTrainData.ToArray());
+
+                    //      nn.Train(trainData.ToArray(),maxEpochs,learnRate,momentum,weightDecay);
+                    //     nn2.Train(trainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
+
+                    double trainAcc = nn.Accuracy(normalizedTrainData.ToArray()); //mark
                     Console.WriteLine("Accuracy on training data = " + trainAcc.ToString("F4"));
                     double testAcc = nn.Accuracy(normalizedTestData.ToArray());
                     Console.WriteLine("Accuracy on test data = " + testAcc.ToString("F4"));
@@ -381,71 +387,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             ///Parael
 
 
-          /*  Helpers.GenerateDataSets(cameraData2head, out trainData, out testData, 0.8);
-
-            //  Console.WriteLine("Done!");
-            Console.WriteLine();
-
-
-            #region Normalization
-            // Console.WriteLine("Normalizing data...");
-            List<double[]> normalizedTrainData = Helpers.NormalizeData(trainData, inputColumns);
-            List<double[]> normalizedTestData = Helpers.NormalizeData(testData, inputColumns);
-
-            //Console.WriteLine("Done!");
-            Console.WriteLine();
-            //#endregion
-
-            //#region Initializing the Neural Network
-            // Console.WriteLine("Creating a new {0}-input, {1}-hidden, {2}-output neural network...", numInput, numHidden, numOutput);
-            var nn = new NeuralNetwork(numInput, numHidden, numOutput);
-
-            nn.SetWeights(weihead.ToArray());
-            //Console.WriteLine("Initializing weights and bias to small random values...");
-            //  nn.InitializeWeights();
-
-            //Console.WriteLine("Done!");
-            //Console.WriteLine();
-            //#endregion
-
-            //#region Training
-            //Console.WriteLine("Beginning training using incremental back-propagation...");
-            //    nn.Train(normalizedTrainData.ToArray(), maxEpochs, learnRate, momentum, weightDecay);
-
-            //Console.WriteLine("Done!");
-            ////Console.WriteLine();
-            //#endregion
-
-            //#region Results
-            //    double[] weights = nn.GetWeights();
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("Final neural network weights and bias values:");
-            //Console.ResetColor();
-            //Helpers.ShowVector(weights, 10, 3, true);
-            //Console.WriteLine();
-
-            double trainAcc = nn.Accuracy(normalizedTrainData.ToArray());
-            Console.WriteLine("Accuracy on training data = " + trainAcc.ToString("F4"));
-            double testAcc = nn.Accuracy(normalizedTestData.ToArray());
-            Console.WriteLine("Accuracy on test data = " + testAcc.ToString("F4"));
-            Console.WriteLine();
-
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("Raw results:");
-            //Console.ResetColor();
-            //  Console.WriteLine(nn.ToString());
-
-            double[] checkacc = nn.output(); 
-
-            for (int i = 0; i < checkacc.Length; i++)
-            {
-                checkacc[i] = Math.Round(checkacc[i], 0);
-                //     out1[i] = Convert.ToInt32(a[i],0);
-
-            } */
+      
 
             Console.WriteLine(checkacc[0] + " " + checkacc[1]);
             Console.WriteLine();
+            Console.WriteLine(checkacc);
             Console.WriteLine(checkaccspine[0] + " " + checkaccspine[1]);
             if (checkacc[0] == 1 && checkacc[1] == 0 &&checkaccspine[0] == 1 && checkaccspine[1] == 0)
             {

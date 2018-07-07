@@ -418,7 +418,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     Array.Copy(trainData[idx], xValues, numInput);
                     Array.Copy(trainData[idx], numInput, tValues, 0, numOutput);
                     ComputeOutputs(xValues); // copy xValues in, compute outputs (store them internally)
-                    UpdateWeights(tValues, learnRate, momentum, weightDecay); // find better weights
+                    //UpdateWeights(tValues, learnRate, momentum, weightDecay); // find better weights
                 } // each training tuple
                 ++epoch;
             }
@@ -498,6 +498,17 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 }
             }
             return bigIndex;
+        }
+        public void InitializeWeights1(double[] ab)
+        {
+            // initialize weights and biases to small random values
+            int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
+            double[] initialWeights = new double[numWeights];
+          //  double lo = -0.01;
+         //   double hi = 0.01;
+            for (int i = 0; i < initialWeights.Length; ++i)
+                initialWeights[i] = ab[i];
+            this.SetWeights(initialWeights);
         }
 
 

@@ -189,8 +189,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
             // copy weights and biases in weights[] array to i-h weights, i-h biases, h-o weights, h-o biases
             int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
-      //      if (weights.Length != numWeights)
-       //         throw new Exception("Bad weights array length: ");
+            if (weights.Length != numWeights)
+               throw new Exception("Bad weights array length: ");
 
             int k = 0; // points into weights param
 
@@ -418,7 +418,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     Array.Copy(trainData[idx], xValues, numInput);
                     Array.Copy(trainData[idx], numInput, tValues, 0, numOutput);
                     ComputeOutputs(xValues); // copy xValues in, compute outputs (store them internally)
-                    UpdateWeights(tValues, learnRate, momentum, weightDecay); // find better weights
+                    //UpdateWeights(tValues, learnRate, momentum, weightDecay); // find better weights
                 } // each training tuple
                 ++epoch;
             }

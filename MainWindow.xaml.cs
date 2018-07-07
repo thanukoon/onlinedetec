@@ -17,7 +17,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
-    using System.Collections;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Threading;
@@ -180,6 +179,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     listhead.Add(anshead);
 
                     listspine.Add(ansspinebase);
+                 //   Console.WriteLine(anshead +"    " + ansspinebase);
 
 
 
