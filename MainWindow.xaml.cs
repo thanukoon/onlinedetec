@@ -179,7 +179,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     listhead.Add(anshead);
 
                     listspine.Add(ansspinebase);
-                 //   Console.WriteLine(anshead +"    " + ansspinebase);
+                 // Console.WriteLine(anshead +"    " + ansspinebase);
 
 
 
@@ -230,15 +230,30 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                         dataspine[i] = dataspine[datahead.Length - ans - 1];
                     }
                 }
-
-             //   Console.WriteLine(listhead.Count());
+                             //   Console.WriteLine(listhead.Count());
                 for (int i = 0; i < listhead.Count; i++)
                 {
                     datahead[i] = listhead[i];
                     dataspine[i] = listspine[i];
+                    //Console.WriteLine(datahead[i]);
                 }
-             //   Console.WriteLine("asd");
+                //   Console.WriteLine("asd");
+                
                 na.getdata(datahead, dataspine);
+
+                for (int i = 0;i<datahead.Count();i++)
+                {
+                    datahead[i] = 0;
+                    dataspine[i] = 0;
+                }
+               
+
+
+              //  this.kinectSensor.Open();
+
+
+               
+
 
 
                 listhead.Clear();
@@ -509,29 +524,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                     numnumeratorhead = X * head.X + Y * head.Y + Z * head.Z + W;
                                     numnumeratorspinebase = X * spinebase.X + Y * spinebase.Y + Z * spinebase.Z + W;
                                     denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
-                                  /* 
-                                
-                                    if (listResult.Count < 56)
-                                    {
-                                        listResult.Add(a);
-                                     
-                                         listResult = listResult.Distinct().ToList();
-                                    
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i<data.Length;i++ )
-                                        {
-                                            data[i] = listResult[i];
-                                          
-                                        }
-
-                                        na.getdata(data);
-                                      
-                                        listResult.Clear();
-
-                                    } */
-                                   
+                              
 
 
 

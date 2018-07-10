@@ -14,7 +14,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         public int numInput;
         private int numHidden;
         public int numOutput;
-
+       public int i = 0;
         private double[] inputs;
 
         private  double[][] ihWeights; // input-hidden
@@ -41,7 +41,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         public NeuralNetwork(int numInput, int numHidden, int numOutput)
         {
             rnd = new Random(0); // for InitializeWeights() and Shuffle()
-
+           
             this.numInput = numInput;
             this.numHidden = numHidden;
             this.numOutput = numOutput;
@@ -60,7 +60,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             // back-prop related arrays below
             this.hGrads = new double[numHidden];
             this.oGrads = new double[numOutput];
-
+            NN nn;
             this.ihPrevWeightsDelta = MakeMatrix(numInput, numHidden);
             this.hPrevBiasesDelta = new double[numHidden];
             this.hoPrevWeightsDelta = MakeMatrix(numHidden, numOutput);
@@ -167,7 +167,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             s += "outputs: \n";
             for (int i = 0; i < outputs.Length; ++i)
-                s += outputs[i].ToString("F1") + " ";
+                s += outputs[i].ToString("F5") + " ";
             s += "\n\n";
 
             s += "===============================\n";
@@ -176,8 +176,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         public  double[] output()
         {
            double[] s = new double[outputs.Length];
-            for (int i = 0; i < outputs.Length; ++i)
-                s[i] = Math.Round(outputs[i] , 3);
+            for (int i = 0; i < outputs.Length; i++)
+                s[i] = Math.Round(outputs[i],5);
 
             return s; 
 
@@ -185,7 +185,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         // ----------------------------------------------------------------------------------------
 
-        public void SetWeights(double[] weights)
+        public void SetWeights(double[] weights,double[] slid)
         {
             // copy weights and biases in weights[] array to i-h weights, i-h biases, h-o weights, h-o biases
             int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
@@ -204,6 +204,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     hoWeights[i][j] = weights[k++];
             for (int i = 0; i < numOutput; ++i)
                 oBiases[i] = weights[k++];
+
+            this.ComputeOutputs(slid);
         }
 
         public void InitializeWeights()
@@ -215,7 +217,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             double hi = 0.01;
             for (int i = 0; i < initialWeights.Length; ++i)
                 initialWeights[i] = (hi - lo) * rnd.NextDouble() + lo;
-            this.SetWeights(initialWeights);
+          //  this.SetWeights(initialWeights);
         }
 
         public double[] GetWeights()
@@ -239,13 +241,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         // ----------------------------------------------------------------------------------------
 
-        private double[] ComputeOutputs(double[] xValues)
+        public double[] ComputeOutputs(double[] xValues)
         {
             if (xValues.Length != numInput)
                 throw new Exception("Bad xValues array length");
 
             double[] hSums = new double[numHidden]; // hidden nodes sums scratch array
+          //  Console.WriteLine(numHidden);
             double[] oSums = new double[numOutput]; // output nodes sums
+          //  Console.WriteLine(numOutput);
 
             for (int i = 0; i < xValues.Length; ++i) // copy x-values to inputs
                 this.inputs[i] = xValues[i];
@@ -272,8 +276,23 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             double[] retResult = new double[numOutput]; // could define a GetOutputs method instead
             Array.Copy(this.outputs, retResult, retResult.Length);
+
+           // for(int i=0; i<this.outputs.Length;i++)
+               // Console.WriteLine(this.outputs[i]);
+
             return retResult;
         } // ComputeOutputs
+
+        internal void InitializeWeights1(double [] weihead)
+        {
+            int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
+            double[] initialWeights = new double[numWeights];
+            double lo = -0.01;
+            double hi = 0.01;
+            for (int i = 0; i < initialWeights.Length; ++i)
+                initialWeights[i] = (hi - lo) * weihead[i] + lo;
+            //this.SetWeights(initialWeights);
+        }
 
         private static double HyperTanFunction(double x)
         {
@@ -304,7 +323,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         // ----------------------------------------------------------------------------------------
 
-        private void UpdateWeights(double[] tValues, double learnRate, double momentum, double weightDecay)
+        public void UpdateWeights(double[] tValues, double learnRate, double momentum, double weightDecay)
         {
             // update the weights and biases using back-propagation, with target values, eta (learning rate),
             // alpha (momentum).
@@ -418,7 +437,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     Array.Copy(trainData[idx], xValues, numInput);
                     Array.Copy(trainData[idx], numInput, tValues, 0, numOutput);
                     ComputeOutputs(xValues); // copy xValues in, compute outputs (store them internally)
-                    //UpdateWeights(tValues, learnRate, momentum, weightDecay); // find better weights
+                    UpdateWeights(tValues, learnRate, momentum, weightDecay); // find better weights
                 } // each training tuple
                 ++epoch;
             }
@@ -469,6 +488,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             double[] xValues = new double[numInput]; // inputs
             double[] tValues = new double[numOutput]; // targets
             double[] yValues; // computed Y
+           // Console.WriteLine(testData.Length);
 
             for (int i = 0; i < testData.Length; ++i)
             {
@@ -499,7 +519,85 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             }
             return bigIndex;
         }
-        
+        public void clear()
+        {
+
+
+
+            for (int i = 0; i < inputs.Length; ++i)
+                inputs[i] = 0;
+
+            for (int i = 0; i < ihWeights.Length; ++i)
+            {
+                for (int j = 0; j < ihWeights[i].Length; ++j)
+                {
+                    ihWeights[i][j] = 0;
+                }
+
+            }
+
+            for (int i = 0; i < hBiases.Length; ++i)
+                hBiases[i] = 0;
+
+            for (int i = 0; i < hOutputs.Length; ++i)
+                hOutputs[i] = 0;
+
+
+            for (int i = 0; i < hoWeights.Length; ++i)
+            {
+                for (int j = 0; j < hoWeights[i].Length; ++j)
+                {
+                    hoWeights[i][j] = 0;
+                }
+
+            }
+
+            for (int i = 0; i < oBiases.Length; ++i)
+                oBiases[i] = 0;
+
+
+
+            for (int i = 0; i < hGrads.Length; ++i)
+                hGrads[i] = 0;
+
+
+
+            for (int i = 0; i < oGrads.Length; ++i)
+                oGrads[i] = 0;
+
+            for (int i = 0; i < ihPrevWeightsDelta.Length; ++i)
+            {
+                for (int j = 0; j < ihPrevWeightsDelta[i].Length; ++j)
+                {
+                    ihPrevWeightsDelta[i][j] = 0;
+                }
+
+            }
+
+            for (int i = 0; i < hPrevBiasesDelta.Length; ++i)
+                hPrevBiasesDelta[i] = 0;
+
+            for (int i = 0; i < hoPrevWeightsDelta.Length; ++i)
+            {
+                for (int j = 0; j < hoPrevWeightsDelta[i].Length; ++j)
+                {
+                    hoPrevWeightsDelta[i][j] = 0;
+                }
+
+            }
+
+
+
+            for (int i = 0; i < oPrevBiasesDelta.Length; ++i)
+                oPrevBiasesDelta[i] = 0;
+
+
+
+            for (int i = 0; i < outputs.Length; ++i)
+                outputs[i] = 0;
+
+        }
+
 
     } // NeuralNetwork
 }
