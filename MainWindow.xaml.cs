@@ -230,14 +230,16 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                         dataspine[i] = dataspine[datahead.Length - ans - 1];
                     }
                 }
-                             //   Console.WriteLine(listhead.Count());
-                for (int i = 0; i < listhead.Count; i++)
+                else
                 {
-                    datahead[i] = listhead[i];
-                    dataspine[i] = listspine[i];
-                    //Console.WriteLine(datahead[i]);
+                    for (int i = 0; i < listhead.Count; i++)
+                    {
+                        datahead[i] = listhead[i];
+                        dataspine[i] = listspine[i];
+
+                    }
                 }
-                //   Console.WriteLine("asd");
+               
                 
                 na.getdata(datahead, dataspine);
 

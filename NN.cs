@@ -17,21 +17,21 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
     class NN
     {
-        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "head.csv"); //breast-cancer-wisconsin
+        private static readonly string sourceFile = Path.Combine(Environment.CurrentDirectory, "datalak.csv"); //breast-cancer-wisconsin
                                                                                                                 // private static readonly string scource = 
                                                                                                                 // Number of input neurons, hidden neurons and output neurons
 
-        private static readonly string sourceFilehead = Path.Combine(Environment.CurrentDirectory, "weihead3.csv");
-        private static readonly string sourceFilespine = Path.Combine(Environment.CurrentDirectory, "weispine3.csv");
-        private static readonly string inputs = Path.Combine(Environment.CurrentDirectory, "input.csv");
-        private static readonly string ihweight = Path.Combine(Environment.CurrentDirectory, "ihweight.csv");
-        private static readonly string hbias = Path.Combine(Environment.CurrentDirectory, "hbias.csv");
-        private static readonly string houtput = Path.Combine(Environment.CurrentDirectory, "houtput.csv");
-        private static readonly string howeight = Path.Combine(Environment.CurrentDirectory, "howeight.csv");
-        private static readonly string obias  = Path.Combine(Environment.CurrentDirectory, "obias.csv");
-        private static readonly string hgrad = Path.Combine(Environment.CurrentDirectory, "hgrad.csv");
-        private static readonly string ograd = Path.Combine(Environment.CurrentDirectory, "ograd.csv");
-        private static readonly string oprevbias = Path.Combine(Environment.CurrentDirectory, "oprevbias.csv");
+        private static readonly string sourceFilehead = Path.Combine(Environment.CurrentDirectory, "weiheadlak619.csv");
+        private static readonly string sourceFilespine = Path.Combine(Environment.CurrentDirectory, "weispinelak619.csv");
+        //private static readonly string inputs = Path.Combine(Environment.CurrentDirectory, "input.csv");
+        //private static readonly string ihweight = Path.Combine(Environment.CurrentDirectory, "ihweight.csv");
+        //private static readonly string hbias = Path.Combine(Environment.CurrentDirectory, "hbias.csv");
+        //private static readonly string houtput = Path.Combine(Environment.CurrentDirectory, "houtput.csv");
+        //private static readonly string howeight = Path.Combine(Environment.CurrentDirectory, "howeight.csv");
+        //private static readonly string obias  = Path.Combine(Environment.CurrentDirectory, "obias.csv");
+        //private static readonly string hgrad = Path.Combine(Environment.CurrentDirectory, "hgrad.csv");
+        //private static readonly string ograd = Path.Combine(Environment.CurrentDirectory, "ograd.csv");
+        //private static readonly string oprevbias = Path.Combine(Environment.CurrentDirectory, "oprevbias.csv");
 
         public static List<double> input = new List<double>();
         public static List<double[]> ihwei = new List<double[]>();
@@ -105,8 +105,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     }
 
                     counthead = 0;
-                    //       Console.WriteLine("asd");
-                   // Console.WriteLine();
                     head++;
                 }
                 else
@@ -122,48 +120,33 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 
             }
-            slidinghead = printKMin(abhead, abhead.Length);
-            slidingspine = printKMin(abspine, abspine.Length); //เทสๆๆๆ
+            slidinghead = printmin(abhead, abhead.Length);
+            slidingspine = printmin(abspine, abspine.Length); //เทสๆๆๆ
 
 
-            //for (int i = 0; i < slidinghead.Count(); i++)
-            //{
-
-            //    headdata[i] = slidinghead[i];
-                
-            //    spinedata[i] = slidingspine[i];
-            //}
-            //   Console.WriteLine(slidinghead.Length);
-
+            foreach (var it  in slidinghead)
+            {
+           //     Console.WriteLine(it);
+            }
 
 
             trian(slidinghead,slidingspine);
 
-            for (int i = 0; i<slidinghead.Length;i++)
-            {
-                slidinghead[i] = 0;
-                slidingspine[i] = 0;
-            }
-
-
-         
-            
-            
-
-           // trian(datahead, dataspine);
             datahead.Clear();
             dataspine.Clear();
 
         }
 
-        public double[] printKMin(double[] arr, int n)
+        public double[] printmin(double[] arr, int n)
         {
+            int m = 80;
             int k = 60;
             int bfslide = 80;
             int count = 20;
             int j;
+            int slidevalue = 19;
             double min;
-            for (int i = 0; i < n - k; i++)
+            for (int i = 0; i < m - k; i++)
             {
                 min = arr[i];
                 for (j = 1; j < k; j++)
@@ -177,9 +160,17 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             }
             for (int i = arr.Length - count; i < arr.Length; i++)
             {
-                arr[i] = sliding[i - bfslide];
+                arr[i] = sliding[slidevalue];
+                slidevalue--;
             }
+            count = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                count++;
+            }
+            //  Console.WriteLine(count);
             return arr;
+
         }
 
 
@@ -207,15 +198,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         public void getData()
         {
             var rows = File.ReadAllLines(sourceFile);
-            var row2 = File.ReadAllLines(inputs);
-            var row3 = File.ReadAllLines(ihweight);
-            var row4 = File.ReadAllLines(hbias);
-            var row5 = File.ReadAllLines(houtput);
-            var row6 = File.ReadAllLines(howeight);
-            var row7 = File.ReadAllLines(obias);
-            var row8 = File.ReadAllLines(hgrad);
-            var row9 = File.ReadAllLines(ograd);
-            var row10 = File.ReadAllLines(oprevbias);
+            //var row2 = File.ReadAllLines(inputs);
+            //var row3 = File.ReadAllLines(ihweight);
+            //var row4 = File.ReadAllLines(hbias);
+            //var row5 = File.ReadAllLines(houtput);
+            //var row6 = File.ReadAllLines(howeight);
+            //var row7 = File.ReadAllLines(obias);
+            //var row8 = File.ReadAllLines(hgrad);
+            //var row9 = File.ReadAllLines(ograd);
+            //var row10 = File.ReadAllLines(oprevbias);
 
 
             foreach (var row in rows)
@@ -235,48 +226,48 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 dataFile.Add(observation);
                 cameraData.Add(observation);
             }
-            foreach (var row in row2)
-            {
-                var values = row.Split(',');
-                var observation = new double[values.Length];
+            //foreach (var row in row2)
+            //{
+            //    var values = row.Split(',');
+            //    var observation = new double[values.Length];
 
 
-                for (int i = 0; i < values.Length; i++)
-                {
-                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
-                                                                            //  Console.WriteLine(observation[i]);
-                }
-                input.AddRange(observation);
-            }
-            foreach (var row in row3)
-            {
-                var values = row.Split(',');
-                var observation = new double[values.Length];
+            //    for (int i = 0; i < values.Length; i++)
+            //    {
+            //        double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+            //                                                                //  Console.WriteLine(observation[i]);
+            //    }
+            //    input.AddRange(observation);
+            //}
+            //foreach (var row in row3)
+            //{
+            //    var values = row.Split(',');
+            //    var observation = new double[values.Length];
 
 
-                for (int i = 0; i < values.Length; i++)
-                {
-                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
-                                                                            //  Console.WriteLine(observation[i]);
-                }
-                ihwei.Add(observation);
+            //    for (int i = 0; i < values.Length; i++)
+            //    {
+            //        double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+            //                                                                //  Console.WriteLine(observation[i]);
+            //    }
+            //    ihwei.Add(observation);
               
-            }
-            foreach (var row in row6)
-            {
-                var values = row.Split(',');
-                var observation = new double[values.Length];
+            //}
+            //foreach (var row in row6)
+            //{
+            //    var values = row.Split(',');
+            //    var observation = new double[values.Length];
 
 
-                for (int i = 0; i < values.Length; i++)
-                {
-                    double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
-                                                                            //  Console.WriteLine(observation[i]);
-                }
+            //    for (int i = 0; i < values.Length; i++)
+            //    {
+            //        double.TryParse(values[i], result: out observation[i]); //เป็นการเปลี่ยนค่าให้เป็น doubleและ สามารถแปลงเป็นชนิดข้อมูลที่เราต้องการได้หรือไม่ 
+            //                                                                //  Console.WriteLine(observation[i]);
+            //    }
 
-                howei.Add(observation);
+            //    howei.Add(observation);
 
-            }
+            //}
 
            
 
@@ -284,10 +275,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         public void trian(double[] datahead1 , double[] dataspine1)
         {
-           
-      
-
-
             var ro2 = File.ReadAllLines(sourceFilehead);
             var ro3 = File.ReadAllLines(sourceFilespine);
 
@@ -338,10 +325,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 Parallel.Invoke(() =>
                 {
 
-
-
-
-
                     var nn = new NeuralNetwork(numInput, numHidden, numOutput);
 
                     var nn2 = new NeuralNetworkspine(numInput, numHidden, numOutput);
@@ -385,28 +368,19 @@ namespace Microsoft.Samples.Kinect.BodyBasics
            Console.WriteLine(checkaccspine[0] + " " + checkaccspine[1]);
             if (checkacc[0] == 1 && checkacc[1] == 0 &&checkaccspine[0] == 1 && checkaccspine[1] == 0)
             {
-                //       Console.WriteLine("falldetection");  //alert lineS
-                //     string UTL = "http://localhost/line/index.php";
-                //     WebClient client = new WebClient();
-                //     client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-
-                //      Stream data = client.OpenRead(UTL);
-                //     StreamReader reader = new StreamReader(data);
-                //     string s = reader.ReadToEnd(); 
+                   //    Console.WriteLine("falldetection");  //alert lineS
+                   //  string UTL = "http://localhost/line/index.php";
+                   //  WebClient client = new WebClient();
+                   //  client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+                   //  Stream data = client.OpenRead(UTL);
+                   //  StreamReader reader = new StreamReader(data);
+                   //string s = reader.ReadToEnd();
+            
                 Console.WriteLine("fall");
 
             }
             else
             {
-
-                /* Console.WriteLine("falldetection");  //alert lineS
-                 string UTL = "http://localhost/line/index.php";
-                 WebClient client = new WebClient();
-                 client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-                 Stream data = client.OpenRead(UTL);
-                 StreamReader reader = new StreamReader(data);
-                 string s = reader.ReadToEnd(); */
-
                 Console.WriteLine("no fall");
 
             }
