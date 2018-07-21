@@ -7,6 +7,7 @@
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -16,6 +17,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Interaction logic for MainWindow
@@ -23,6 +27,26 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public int intime = 6;
+        public double a;
+        public int bin;
+        public int ans;
+        public List<double> listhead = new List<double>();
+        public List<double> listspine = new List<double>();
+        NN na = new NN();
+        public int timer = 0;
+        public double[] data = new double[56];
+
+        double anshead;
+        double ansspinebase;
+        double numnumeratorhead;
+        double numnumeratorspinebase;
+        double denominator;
+        public double[] data1 = new double[80];
+
+        public double[] datahead = new double[100];
+        public double[] dataspine = new double[100];
+
         /// <summary>
         /// Radius of drawn hand circles
         /// </summary>
@@ -63,6 +87,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
 
+       
         /// <summary>
         /// Brush used for drawing joints that are currently inferred
         /// </summary>        
@@ -87,7 +112,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// Active Kinect sensor
         /// </summary>
         private KinectSensor kinectSensor = null;
-
+        
         /// <summary>
         /// Coordinate mapper to map one type of point to another
         /// </summary>
@@ -127,12 +152,122 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// Current status text to display
         /// </summary>
         private string statusText = null;
-
+        DispatcherTimer dt = new DispatcherTimer();
+        DispatcherTimer dt2 = new DispatcherTimer();
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
+
+        private void dataTicker(object sender, EventArgs e)
+        {
+            try
+            {
+
+                Parallel.Invoke(() =>
+                {
+
+                    anshead = Math.Round(numnumeratorhead / denominator, 3);
+                    ansspinebase = Math.Round(numnumeratorspinebase / denominator, 3);
+
+
+
+                });
+                if (intime < 6)
+                {
+                    //  timer++;
+
+                    listhead.Add(anshead);
+
+                    listspine.Add(ansspinebase);
+                 // Console.WriteLine(anshead +"    " + ansspinebase);
+
+
+
+                }
+            }
+            catch (AggregateException a)
+            {
+                Console.WriteLine(a);
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            dt.Interval = TimeSpan.FromSeconds(1);
+            dt.Tick += dtTicker;
+
+            dt.Start();
+
+            dt2.Interval = TimeSpan.FromSeconds(0.05);
+            dt2.Tick += dataTicker;
+            dt2.Start();
+
+
+        }
+        private void dtTicker(object sender, EventArgs e)
+        {
+            intime--;
+            Console.WriteLine(intime);
+
+
+
+            if (intime == 0)
+            {
+                for (int i = 0; i < listhead.Count; i++)
+                {
+                    datahead[i] = listhead[i];
+                    // Console.WriteLine(datahead[i]);
+                    dataspine[i] = listspine[i];
+                }
+
+                ans = datahead.Length - listhead.Count;
+
+                if (ans != 20)
+                {
+                    for (int i = datahead.Length - ans; i <= 80; i++)
+                    {
+                        datahead[i] = datahead[datahead.Length - ans - 1];
+                        dataspine[i] = dataspine[datahead.Length - ans - 1];
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < listhead.Count; i++)
+                    {
+                        datahead[i] = listhead[i];
+                        dataspine[i] = listspine[i];
+
+                    }
+                }
+               
+                
+                na.getdata(datahead, dataspine);
+
+                for (int i = 0;i<datahead.Count();i++)
+                {
+                    datahead[i] = 0;
+                    dataspine[i] = 0;
+                }
+               
+
+
+              //  this.kinectSensor.Open();
+
+
+               
+
+
+
+                listhead.Clear();
+                listspine.Clear();
+                intime = 6;
+            }
+
+        }
         public MainWindow()
         {
+          
+         
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
 
@@ -140,7 +275,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
 
             // get the depth (display) extents
-            FrameDescription frameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
+
+             FrameDescription frameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
+            //FrameDescription frameDescription = this.kinectSensor.ColorFrameSource.FrameDescription;
 
             // get size of joint space
             this.displayWidth = frameDescription.Width;
@@ -150,6 +287,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
 
             // a bone defined as a line between two joints
+          
             this.bones = new List<Tuple<JointType, JointType>>();
 
             // Torso
@@ -199,6 +337,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             // set IsAvailableChanged event notifier
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
 
+          
+         
+
             // open the sensor
             this.kinectSensor.Open();
 
@@ -217,7 +358,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             // initialize the components (controls) of the window
             this.InitializeComponent();
+
+
+         
         }
+
+        
+
+
+
 
         /// <summary>
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
@@ -301,6 +450,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <param name="e">event arguments</param>
         private void Reader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
+            string message = "No Skeleton Data";
             bool dataReceived = false;
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
@@ -318,55 +468,113 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     bodyFrame.GetAndRefreshBodyData(this.bodies);
                     dataReceived = true;
                 }
+                
             }
+
 
             if (dataReceived)
             {
+
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
-                    // Draw a transparent background to set the render size
-                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
-
-                    int penIndex = 0;
-                    foreach (Body body in this.bodies)
+                    using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
                     {
-                        Pen drawPen = this.bodyColors[penIndex++];
 
-                        if (body.IsTracked)
+                        
+                        // Draw a transparent background to set the render size
+                        dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+
+                        int penIndex = 0;
+
+                        foreach (Body body in this.bodies)
                         {
-                            this.DrawClippedEdges(body, dc);
 
-                            IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
+                            Pen drawPen = this.bodyColors[penIndex++];
 
-                            // convert the joint points to depth (display) space
-                            Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
-
-                            foreach (JointType jointType in joints.Keys)
+                            if (body.IsTracked)
                             {
-                                // sometimes the depth(Z) of an inferred joint may show as negative
-                                // clamp down to 0.1f to prevent coordinatemapper from returning (-Infinity, -Infinity)
-                                CameraSpacePoint position = joints[jointType].Position;
-                                if (position.Z < 0)
+                                this.DrawClippedEdges(body, dc);
+
+                                IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
+
+                                // convert the joint points to depth (display) space
+                                Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
+
+                                foreach (JointType jointType in joints.Keys)
                                 {
-                                    position.Z = InferredZPositionClamp;
+
+
+                                    // sometimes the depth(Z) of an inferred joint may show as negative
+                                    // clamp down to 0.1f to prevent coordinatemapper from returning (-Infinity, -Infinity)
+
+                                    CameraSpacePoint position = joints[jointType].Position;
+                                    if (position.Z < 0)
+                                    {
+                                        position.Z = InferredZPositionClamp;
+                                    }
+
+                                    Vector4 floorClipPlane = bodyFrame.FloorClipPlane;
+                                    float X = floorClipPlane.X;
+                                    float Y = floorClipPlane.Y;
+                                    float Z = floorClipPlane.Z;
+                                    float W = floorClipPlane.W;
+
+                                    CameraSpacePoint ee = joints[JointType.Neck].Position;
+                                    CameraSpacePoint head = joints[JointType.Head].Position;
+                                    CameraSpacePoint spinebase = joints[JointType.SpineBase].Position;
+
+                                    numnumeratorhead = X * head.X + Y * head.Y + Z * head.Z + W;
+                                    numnumeratorspinebase = X * spinebase.X + Y * spinebase.Y + Z * spinebase.Z + W;
+                                    denominator = Math.Sqrt(X * X + Y * Y + Z * Z);
+                              
+
+
+
+
+
+
+
+                                    var spine = body.Joints[JointType.SpineMid];
+
+
+
+                                    DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
+                                    jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
+
+                                    message = string.Format("SKelton: X:{0:0.0} Y:{1:0.0} Z:{2:0.0}",   // สร้าง postion บนร่างกาย ด้วย x,y,z 
+                                                                                                        //this.bones.Add(new Tuple<JointType, JointType>(JointType.SpineMid, JointType.SpineBase));
+                                                                                                        //this.bones.(new Tuple<JointType,JointType>(JointType.SpineBase , JointType.SpineBase)),
+                             spine.Position.X,
+                             spine.Position.Y,
+                             spine.Position.Z); 
+                                  
+
                                 }
 
-                                DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
-                                jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
+  
+
+
+                                this.DrawBody(joints, jointPoints, dc, drawPen);
+
+                                this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
+                                this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
+
                             }
+                            
 
-                            this.DrawBody(joints, jointPoints, dc, drawPen);
-
-                            this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
-                            this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
                         }
+                        // prevent drawing outside of our render area
+                        this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+                       
                     }
-
-                    // prevent drawing outside of our render area
-                    this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
                 }
+
+                
             }
+            Texth.Text = message;
+
         }
+        
 
         /// <summary>
         /// Draws a body
@@ -513,6 +721,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             // on failure, set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
+          
         }
     }
 }
