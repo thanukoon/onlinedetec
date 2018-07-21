@@ -368,14 +368,14 @@ namespace Microsoft.Samples.Kinect.BodyBasics
            Console.WriteLine(checkaccspine[0] + " " + checkaccspine[1]);
             if (checkacc[0] == 1 && checkacc[1] == 0 &&checkaccspine[0] == 1 && checkaccspine[1] == 0)
             {
-                   //    Console.WriteLine("falldetection");  //alert lineS
-                   //  string UTL = "http://localhost/line/index.php";
-                   //  WebClient client = new WebClient();
-                   //  client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-                   //  Stream data = client.OpenRead(UTL);
-                   //  StreamReader reader = new StreamReader(data);
-                   //string s = reader.ReadToEnd();
-            
+                Console.WriteLine("falldetection");  //alert lineS
+                string UTL = "http://localhost/line/index.php";
+                WebClient client = new WebClient();
+                client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+                Stream data = client.OpenRead(UTL);
+                StreamReader reader = new StreamReader(data);
+                string s = reader.ReadToEnd();
+
                 Console.WriteLine("fall");
 
             }
